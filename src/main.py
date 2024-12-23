@@ -14,10 +14,13 @@ def generar_codigo_contenido(tipo):
     database[1].execute(f"select codc from contenido where tipo='{tipo}'")
     letra = tipo[0].lower()
     lista = database[1].fetchall()
-    lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:]))
-    resultado = lista_ordenada[len(lista_ordenada)-1][0]
-    resultado = resultado.replace(letra,"")
-    return int(resultado)+1
+    if lista is None:
+        return 1
+    else:
+        lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:]))
+        resultado = lista_ordenada[len(lista_ordenada)-1][0]
+        resultado = resultado.replace(letra,"")
+        return int(resultado)+1
 
 def generar_codigo_plataforma():
     database[1].execute("select codpl from plataformas;")
