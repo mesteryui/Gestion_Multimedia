@@ -109,10 +109,6 @@ def anadirepisodios_vistos(titulo, ep_vistos):
     database[0].commit()
 
 
-def saber_episodios_vistos(titulo):
-    database[1].execute(f"select titulo,episodios_vistos,episodios_totales from contenido,episodios where titulo='{titulo}' and episodios.codc=contenido.codc;")
-    return database[1].fetchall()
-
 
 def main():
     op1 = 0
