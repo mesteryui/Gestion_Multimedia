@@ -11,6 +11,15 @@ def obtenercodigo_contenido(titulo):
     episodio = database[1].fetchone()
     return episodio[0]
 
+def obtener_episodios_tipo_contenido(tipo):
+    database[1].execute(f"select titulo,episodios_vistos,episodios_totales from contenido,episodios where episodios.codc=contenido.codc and tipo='{tipo}'")
+    datos = database[1].fetchall()
+    articul = "las" if tipo=="Serie" else "los"
+    articul2 = "el" if tipo=="Anime" else "la"
+    print(f"De {articul} {tipo.lower()}s se tiene la siguiente informacion:\n")
+    for dato in datos:
+        print(f"De {articul2} {tipo.lower()} {dato[0]} se han visto {dato[1]} de {dato[2]} episodios\n")
+
 def insertar_contenido_plataforma(titulo,nombreplataforma):
     """
     Insertar contenido a plataforma
@@ -116,6 +125,9 @@ def main():
             if op2 == 1:
                 titulo = input("Titulo de la serie/anime:")
                 episodios_saber(titulo)
+            elif op2 == 2:
+                tipo = input("Introduce el tipo de contenido")
+                obtener_episodios_tipo_contenido(tipo)
             elif op2 == 3:
                 titulo = input("Dime el titulo del contenido:")
                 saber_plataforma_veo_contenido(titulo)
