@@ -14,7 +14,7 @@ def generar_codigo_contenido(tipo):
     database[1].execute(f"select codc from contenido where tipo='{tipo}'")
     letra = tipo[0].lower()
     lista = database[1].fetchall()
-    if lista is None:
+    if len(lista)==0:
         return 1
     else:
         lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:]))
