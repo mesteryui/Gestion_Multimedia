@@ -9,7 +9,7 @@ def generar_codigo_contenido(tipo):
     """
     Pasando el tipo de contenido a añadir creamos el numero que se le añade al codigo
     :param tipo: el tipo de contenido a añadir
-    :return: (numero ultimo codc)+1
+    :return: (numero ultimo codc)+1 o 1 si no existen codigos con la letra para ese tipo definido
     """
     database[1].execute(f"select codc from contenido where tipo='{tipo}'")
     letra = tipo[0].lower()
