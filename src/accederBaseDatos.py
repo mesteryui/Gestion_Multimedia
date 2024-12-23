@@ -18,6 +18,7 @@ def conectar_base():
         return conexion,cursor
     except psycopg2.Error as e:
         print("Error al insertar datos:", e)
+        return e
 
 def cerrar_conexion(datab):
     conex = datab[0]

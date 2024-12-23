@@ -188,5 +188,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    cerrar_conexion(database)
+    if database is psycopg2.Error:
+        exit(0)
+    else:
+        main()
+        cerrar_conexion(database)
