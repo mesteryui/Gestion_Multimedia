@@ -1,6 +1,10 @@
 from accederBaseDatos import *
 
 database = conectar_base()
+def anadir_descripcion(titulo,descripcion):
+    database[1].execute(f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';")
+    database[0].commit()
+
 def obtenercodigo_contenido(titulo):
     """
     Obtener el codigo de un item de contenido
@@ -115,10 +119,10 @@ def main():
                     else:
                         continue
             elif op2 == 2:
-                codpl = input("Introduzca codigo de la plataforma:")
+                codpl = input("Introduzca un numero:")
                 nompl = input("Introduzca el nombre de la plataforma:")
                 url = input("Introduzca el enlace de acceso a la plataforma:")
-                database[1].execute(f"insert into plataformas values('{codpl}','{nompl}','{url}')")
+                database[1].execute(f"insert into plataformas values('pl{codpl}','{nompl}','{url}')")
                 database[0].commit()
             elif op2 == 4:
                 titulo = input("Introduzca el titulo de la serie:")
@@ -145,9 +149,17 @@ def main():
             print("1.Contenido\n2.Episodios\n3.Plataformas")
             op8 = int(input())
             if op8 == 1:
+                print("1.Añadir descripcion")
+                op9 = int(input())
+                if op9 == 1:
+                    titulo = input("Introduce el titulo del contenido al que deseas añadir la descripcion:")
+                    descripcion = input("Introduce la descripcion a añadir")
+                    anadir_descripcion(titulo,descripcion)
+
+            elif op8 == 2:
                 titulo = input("Introduzca el titulo del anime/serie:")
                 ep_vistos = input("Introduzca en numero los episodios vistos:")
-                anadirepisodios_vistos(titulo, ep_vistos)
+                anadirepisodios_vistos(titulo,ep_vistos)
 
 
 if __name__ == '__main__':
