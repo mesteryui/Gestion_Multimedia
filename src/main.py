@@ -4,7 +4,14 @@ database = conectar_base()
 def anadir_descripcion(titulo,descripcion):
     database[1].execute(f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';")
     database[0].commit()
-
+def codigo_ultimo_contenido(tipo):
+    database[1].execute(f"select codc from contenido where tipo='{tipo}'")
+    letra = tipo[0].lower()
+    lista = database[1].fetchall()
+    lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:]))
+    resultado = lista_ordenada[len(lista_ordenada)-1][0]
+    resultado = resultado.replace(letra,"")
+    return int(resultado)+1
 def obtenercodigo_contenido(titulo):
     """
     Obtener el codigo de un item de contenido
@@ -98,12 +105,14 @@ def main():
             print("1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.")
             op2 = int(input())
             if op2 == 1:
-                codc = input("Introduzca un numero que no se repita:")
                 titulo = input("Introduzca el titulo del contenido:")
                 descripcion = input("Introduzca descripcion del contenido:")
                 tipo = input("Introduzca el tipo de contenido")
                 cod = tipo[0].lower()
-                database[1].execute(f"insert into contenido values('{cod}{codc}','{titulo}','{descripcion}','{tipo}')")
+                codc = codigo_ultimo_contenido(tipo)
+                codc = str(codc)
+                codc = cod + codc
+                database[1].execute(f"insert into contenido values('{codc}','{titulo}','{descripcion}','{tipo}')")
                 database[0].commit()
                 if tipo == "Serie" or "Anime":
                     print("Introduzca un numero:")
