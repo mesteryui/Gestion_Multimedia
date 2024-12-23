@@ -4,7 +4,7 @@ database = conectar_base()
 def anadir_descripcion(titulo,descripcion):
     database[1].execute(f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';")
     database[0].commit()
-def codigo_ultimo_contenido(tipo):
+def generar_codigo_contenido(tipo):
     database[1].execute(f"select codc from contenido where tipo='{tipo}'")
     letra = tipo[0].lower()
     lista = database[1].fetchall()
@@ -109,7 +109,7 @@ def main():
                 descripcion = input("Introduzca descripcion del contenido:")
                 tipo = input("Introduzca el tipo de contenido")
                 cod = tipo[0].lower()
-                codc = codigo_ultimo_contenido(tipo)
+                codc = generar_codigo_contenido(tipo)
                 codc = str(codc)
                 codc = cod + codc
                 database[1].execute(f"insert into contenido values('{codc}','{titulo}','{descripcion}','{tipo}')")
