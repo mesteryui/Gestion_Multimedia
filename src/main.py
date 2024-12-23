@@ -30,12 +30,12 @@ def saber_plataforma_veo_contenido(titulo):
     :param titulo: el titulo del contenido
     """
     database[1].execute(
-        f"select nomg,url,tipo from contenido,plataformas where codpl in (select codpl from disponible) and codc in (select codc from disponible) and titulo='{titulo}'")
+        f"select nomg,url,tipo from contenido join disponible on contenido.codc=disponible.codc join plataformas on plataformas.codpl=disponible.codpl where titulo='{titulo}';")
     plataformas = database[1].fetchall()
     tipo = plataformas[0][2]
     tipo = tipo.lower()
     if tipo == "anime":
-        print(f"El {tipo} {titulo} es vista desde {plataformas[0][0]} cuya url es {plataformas[0][1]}\n")
+        print(f"El {tipo} {titulo} es visto desde {plataformas[0][0]} cuya url es {plataformas[0][1]}\n")
     else:
         print(f"La {tipo} {titulo} es vista desde {plataformas[0][0]} cuya url es {plataformas[0][1]}\n")
 
@@ -48,12 +48,13 @@ def episodios_saber(titulo):
     database[1].execute(
         f"select episodios_vistos,episodios_totales,tipo from contenido,episodios where titulo='{titulo}' and episodios.codc=contenido.codc;")
     episodios = database[1].fetchall()
+    vistos = 0 if episodios[0][0] is None else episodios[0][0]
     tipo = episodios[0][2]
     tipo = tipo.lower()
     if tipo == "anime":
-        print(f"Del {tipo} {titulo} han sido vistos {episodios[0][0]} de {episodios[0][1]} episodios\n")
+        print(f"Del {tipo} {titulo} han sido vistos {vistos} de {episodios[0][1]} episodios\n")
     else:
-        print(f"De la {tipo} {titulo} han sido vistos {episodios[0][0]} de {episodios[0][1]} episodios\n")
+        print(f"De la {tipo} {titulo} han sido vistos {vistos} de {episodios[0][1]} episodios\n")
 
 
 
