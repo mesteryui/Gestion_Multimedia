@@ -4,7 +4,13 @@ database = conectar_base()
 def anadir_descripcion(titulo,descripcion):
     database[1].execute(f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';")
     database[0].commit()
+
 def generar_codigo_contenido(tipo):
+    """
+    Pasando el tipo de contenido a añadir creamos el numero que se le añade al codigo
+    :param tipo: el tipo de contenido a añadir
+    :return: (numero ultimo codc)+1
+    """
     database[1].execute(f"select codc from contenido where tipo='{tipo}'")
     letra = tipo[0].lower()
     lista = database[1].fetchall()
@@ -12,6 +18,15 @@ def generar_codigo_contenido(tipo):
     resultado = lista_ordenada[len(lista_ordenada)-1][0]
     resultado = resultado.replace(letra,"")
     return int(resultado)+1
+
+def generar_codigo_plataforma():
+    database[1].execute("select codpl from plataformas;")
+    lista = database[1].fetchall()
+    lista_ordenada = sorted(lista, key=lambda x: int(x[0][2:]))
+    resultado = lista_ordenada[len(lista_ordenada) - 1][0]
+    resultado = resultado.replace("pl","")
+    return int(resultado) + 1
+
 def obtenercodigo_contenido(titulo):
     """
     Obtener el codigo de un item de contenido
@@ -109,16 +124,14 @@ def main():
                 descripcion = input("Introduzca descripcion del contenido:")
                 tipo = input("Introduzca el tipo de contenido")
                 cod = tipo[0].lower()
-                codc = generar_codigo_contenido(tipo)
-                codc = str(codc)
-                codc = cod + codc
+                num = generar_codigo_contenido(tipo)
+                codc = cod + str(num)
                 database[1].execute(f"insert into contenido values('{codc}','{titulo}','{descripcion}','{tipo}')")
                 database[0].commit()
                 if tipo == "Serie" or "Anime":
                     print("Introduzca un numero:")
-                    numero = input()
                     episodios_totales = input("Dime cuantos episodios tiene el contenido:")
-                    database[1].execute(f"insert into episodios values('{codc}','{numero}','{episodios_totales}')")
+                    database[1].execute(f"insert into episodios values('{codc}',1,'{episodios_totales}')")
                     database[0].commit()
                     opcion = input("Desea añadir los episodios vistos en caso de que haya visto alguno:")
                     opcion = opcion.lower()
@@ -128,7 +141,7 @@ def main():
                     else:
                         continue
             elif op2 == 2:
-                codpl = input("Introduzca un numero:")
+                codpl = generar_codigo_plataforma()
                 nompl = input("Introduzca el nombre de la plataforma:")
                 url = input("Introduzca el enlace de acceso a la plataforma:")
                 database[1].execute(f"insert into plataformas values('pl{codpl}','{nompl}','{url}')")
