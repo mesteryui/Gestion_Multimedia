@@ -29,6 +29,8 @@ def generar_codigo_plataforma():
     resultado = lista_ordenada[len(lista_ordenada) - 1][0]
     resultado = resultado.replace("pl","")
     return int(resultado) + 1
+def generar_codigo_genero(nomg):
+    return nomg[0]
 
 def obtenercodigo_contenido(titulo):
     """
@@ -144,6 +146,11 @@ def main():
                 nompl = input("Introduzca el nombre de la plataforma:")
                 url = input("Introduzca el enlace de acceso a la plataforma:")
                 database[1].execute(f"insert into plataformas values('pl{codpl}','{nompl}','{url}')")
+                database[0].commit()
+            elif op2 == 3:
+                nombre_genero = input("Introduzca el nombre del genero:")
+                codg = generar_codigo_genero(nombre_genero)
+                database[1].execute(f"insert into generos values('{codg}','{nombre_genero}')")
                 database[0].commit()
             elif op2 == 4:
                 titulo = input("Introduzca el titulo de la serie:")
