@@ -29,9 +29,8 @@ def insertar_contenido_plataforma(titulo,nombreplataforma):
     """
     codc = obtenercodigo_contenido(titulo)
     database[1].execute(f"select codpl from plataformas where nomg='{nombreplataforma}'")
-    codpl = database[1].fetchone()
-    codpl1 = codpl[0]
-    database[1].execute(f"insert into disponible values('{codc}','{codpl1}')")
+    codpl = database[1].fetchone()[0]
+    database[1].execute(f"insert into disponible values('{codc}','{codpl}')")
     database[0].commit()
 def saber_plataforma_veo_contenido(titulo):
     """
@@ -43,10 +42,11 @@ def saber_plataforma_veo_contenido(titulo):
     plataformas = database[1].fetchall()
     tipo = plataformas[0][2]
     tipo = tipo.lower()
-    if tipo == "anime":
-        print(f"El {tipo} {titulo} es visto desde {plataformas[0][0]} cuya url es {plataformas[0][1]}\n")
-    else:
-        print(f"La {tipo} {titulo} es vista desde {plataformas[0][0]} cuya url es {plataformas[0][1]}\n")
+    for plataforma in plataformas:
+        if tipo == "anime":
+            print(f"El {tipo} {titulo} es visto desde {plataforma[0]} cuya url es {plataforma[1]}\n")
+        else:
+            print(f"La {tipo} {titulo} es vista desde {plataforma[0]} cuya url es {plataforma[1]}\n")
 
 
 def episodios_saber(titulo):
@@ -94,11 +94,12 @@ def main():
             print("1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.")
             op2 = int(input())
             if op2 == 1:
-                codc = input("Introduzca el codigo del contenido:")
+                codc = input("Introduzca un numero que no se repita:")
                 titulo = input("Introduzca el titulo del contenido:")
                 descripcion = input("Introduzca descripcion del contenido:")
                 tipo = input("Introduzca el tipo de contenido")
-                database[1].execute(f"insert into contenido values('{codc}','{titulo}','{descripcion}','{tipo}')")
+                cod = tipo[0].lower()
+                database[1].execute(f"insert into contenido values('{cod}{codc}','{titulo}','{descripcion}','{tipo}')")
                 database[0].commit()
                 if tipo == "Serie" or "Anime":
                     print("Introduzca un numero:")
@@ -106,6 +107,13 @@ def main():
                     episodios_totales = input("Dime cuantos episodios tiene el contenido:")
                     database[1].execute(f"insert into episodios values('{codc}','{numero}','{episodios_totales}')")
                     database[0].commit()
+                    opcion = input("Desea añadir los episodios vistos en caso de que haya visto alguno:")
+                    opcion = opcion.lower()
+                    if opcion == "si":
+                        ep_vistos = input("Introduzca los episodios vistos:")
+                        anadirepisodios_vistos(titulo,ep_vistos)
+                    else:
+                        continue
             elif op2 == 2:
                 codpl = input("Introduzca codigo de la plataforma:")
                 nompl = input("Introduzca el nombre de la plataforma:")
