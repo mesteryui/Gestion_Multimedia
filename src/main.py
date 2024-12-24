@@ -14,7 +14,7 @@ def generar_codigo_contenido(tipo):
     database[1].execute(f"select codc from contenido where tipo='{tipo}'")
     letra = tipo[0].lower()
     lista = database[1].fetchall()
-    if len(lista)==0:
+    if not lista:
         return 1
     else:
         lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:]))
@@ -72,9 +72,9 @@ def saber_plataforma_veo_contenido(titulo):
     database[1].execute(
         f"select nomg,url,tipo from contenido join disponible on contenido.codc=disponible.codc join plataformas on plataformas.codpl=disponible.codpl where titulo='{titulo}';")
     plataformas = database[1].fetchall()
-    tipo = plataformas[0][2]
-    tipo = tipo.lower()
     for plataforma in plataformas:
+        tipo = plataforma[2]
+        tipo = tipo.lower()
         if tipo == "anime":
             print(f"El {tipo} {titulo} es visto desde {plataforma[0]} cuya url es {plataforma[1]}\n")
         else:
@@ -83,20 +83,15 @@ def saber_plataforma_veo_contenido(titulo):
 
 def episodios_saber(titulo):
     """
-    Nos permite saber cuantos episodios hemos visto de una serie o anime
-    :param titulo: el titulo de esa serie o anime
+    Muestra la cantidad de episodios vistos de un contenido específico.
+    :param titulo: Título del contenido
     """
     database[1].execute(
-        f"select episodios_vistos,episodios_totales,tipo from contenido,episodios where titulo='{titulo}' and episodios.codc=contenido.codc;")
-    episodios = database[1].fetchall()
-    vistos = 0 if episodios[0][0] is None else episodios[0][0]
-    tipo = episodios[0][2]
-    tipo = tipo.lower()
-    if tipo == "anime":
-        print(f"Del {tipo} {titulo} han sido vistos {vistos} de {episodios[0][1]} episodios\n")
-    else:
-        print(f"De la {tipo} {titulo} han sido vistos {vistos} de {episodios[0][1]} episodios\n")
-
+        f"SELECT episodios_vistos, episodios_totales FROM contenido JOIN episodios ON contenido.codc = episodios.codc WHERE titulo='{titulo}'"
+    )
+    episodios = database[1].fetchone()
+    vistos = episodios[0] or 0
+    print(f"De {titulo}: {vistos}/{episodios[1]} episodios vistos.\n")
 
 
 
@@ -118,14 +113,13 @@ def modificar_episodios_totales(titulo, ep_totales):
     database[0].commit()
 
 
-
 def main():
     op1 = 0
-    while op1 < 5:
+    while op1 !=5:
         print("1.Introducir Datos\n2.Ver datos\n3.Eliminar Dato\n4.Actualizar dato\n5.Salir")
-        op1 = int(input())
+        op1 = int(input("Seleccione una opción: "))
         if op1 == 1:
-            print("1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.")
+            print("1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido")
             op2 = int(input())
             if op2 == 1:
                 titulo = input("Introduzca el titulo del contenido:")
@@ -145,7 +139,7 @@ def main():
                     opcion = opcion.lower()
                     if opcion == "si":
                         ep_vistos = input("Introduzca los episodios vistos:")
-                        anadirepisodios_vistos(titulo,ep_vistos)
+                        anadirepisodios_vistos(titulo, ep_vistos)
                     else:
                         continue
             elif op2 == 2:
@@ -197,7 +191,7 @@ def main():
                 if op9 == 1:
                     titulo = input("Introduzca el titulo del anime/serie:")
                     ep_vistos = input("Introduzca en numero los episodios vistos:")
-                    anadirepisodios_vistos(titulo,ep_vistos)
+                    anadirepisodios_vistos(titulo, ep_vistos)
                 elif op9 == 2:
                     titulo = input("Introduzca el titulo del anime/serie:")
                     ep_totales = input("Introduzca en numero los episodios vistos:")
