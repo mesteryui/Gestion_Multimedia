@@ -2,6 +2,11 @@ from accederBaseDatos import *
 
 database = conectar_base()
 def anadir_descripcion(titulo,descripcion):
+    """
+    Añadir descripcion al contenido
+    :param titulo: el titulo del contenido
+    :param descripcion: la descipcion a añadir
+    """
     database[1].execute(f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';")
     database[0].commit()
 
@@ -23,12 +28,17 @@ def generar_codigo_contenido(tipo):
         return int(resultado)+1
 
 def generar_codigo_plataforma():
-    database[1].execute("select codpl from plataformas;")
-    lista = database[1].fetchall()
-    lista_ordenada = sorted(lista, key=lambda x: int(x[0][2:]))
-    resultado = lista_ordenada[len(lista_ordenada) - 1][0]
-    resultado = resultado.replace("pl","")
-    return int(resultado) + 1
+    """
+    Generar el codigo numerico para plataformas
+    :return: el codigo numerico
+    """
+    database[1].execute("select codpl from plataformas;") # Obtener los codigos de las plataformas
+    lista = database[1].fetchall() # Guardarlos en una lista
+    lista_ordenada = sorted(lista, key=lambda x: int(x[0][2:])) # Ordenar esa lista de menor a mayor numero
+    resultado = lista_ordenada[len(lista_ordenada) - 1][0] # Acceder al ultimo elemento de la lista
+    resultado = resultado.replace("pl","") # Quitarle los dos primeros caracters
+    return int(resultado) + 1 # Devolver el resultado de eso más 1 como entero
+
 def generar_codigo_genero(nomg):
     return nomg[0]
 
@@ -64,6 +74,7 @@ def insertar_contenido_plataforma(titulo,nombreplataforma):
     codpl = database[1].fetchone()[0]
     database[1].execute(f"insert into disponible values('{codc}','{codpl}')")
     database[0].commit()
+
 def saber_plataforma_veo_contenido(titulo):
     """
     Te permite ver la plataforma en la que ves un contenido
@@ -115,10 +126,23 @@ def modificar_episodios_totales(titulo, ep_totales):
 
 def visto_un_episodio(titulo):
     codigo = obtenercodigo_contenido(titulo)
-    database[1].execute(f"select episodios_vistos from episodios where codc='{codigo}'")
-    lista = int(database[1].fetchone()[0])+1
-    database[1].execute(f"update episodios set episodios_vistos={str(lista)} where codc='{codigo}'")
-    database[0].commit()
+    database[1].execute(f"select episodios_vistos,episodios_totales from episodios where codc='{codigo}'")
+    lista = database[1].fetchone()
+    vistos = int(lista[0])+1
+    totales = int(lista[1])
+    if vistos<totales:
+        database[1].execute(f"update episodios set episodios_vistos={str(vistos)} where codc='{codigo}'")
+        database[0].commit()
+    else:
+        print("Si añadimos un visto más la cantidad de vistos superara al total de episodios")
+
+def cuantos_veo_y_visto_contenido(tipo):
+    letra = tipo[0].lower()
+    database[1].execute(f"select count(codc) from contenido where codc in (select codc from contenido where codc like '{letra}%') and codc in (select codc from episodios where episodios_vistos<episodios_totales);")
+    viendo = database[1].fetchone()
+    database[1].execute(f"select count(codc) from contenido where codc in (select codc from contenido where codc like '{letra}%') and codc in (select codc from episodios where episodios_vistos=episodios_totales);")
+    visto = database[1].fetchone()
+    return viendo[0],visto[0]
 
 
 def introducir_contenido_genero(titulo, genero):
@@ -181,7 +205,7 @@ def main():
 
         elif op1 == 2:
             print(
-                "1.Cuantos Episodios se han visto de un anime/serie especifico\n2.Saber cuantos episodios se han visto de animes/series\n3.En que plataforma veo contenido")
+                "1.Cuantos Episodios se han visto de un anime/serie especifico\n2.Saber cuantos episodios se han visto de animes/series\n3.En que plataforma veo contenido\n4.Cuanto contendio estoy viendo\n5.Cuanto he visto")
             op2 = int(input())
             if op2 == 1:
                 titulo = input("Titulo de la serie/anime:")
@@ -192,6 +216,10 @@ def main():
             elif op2 == 3:
                 titulo = input("Dime el titulo del contenido:")
                 saber_plataforma_veo_contenido(titulo)
+            elif op2 == 4:
+                tipo = input("Indicame el tipo de contenido:")
+                viendo = cuantos_veo_y_visto_contenido(tipo)[0]
+                print(f"Estoy viendo {tipo} un total de {viendo} {tipo.lower()}s")
 
 
         elif op1 == 4:
