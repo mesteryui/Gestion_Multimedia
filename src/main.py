@@ -16,16 +16,16 @@ def generar_codigo_contenido(tipo):
     :param tipo: el tipo de contenido a añadir
     :return: (numero ultimo codc)+1 o 1 si no existen codigos con la letra para ese tipo definido
     """
-    database[1].execute(f"select codc from contenido where tipo='{tipo}'")
-    letra = tipo[0].lower()
-    lista = database[1].fetchall()
-    if not lista:
-        return 1
-    else:
-        lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:]))
-        resultado = lista_ordenada[len(lista_ordenada)-1][0]
-        resultado = resultado.replace(letra,"")
-        return int(resultado)+1
+    database[1].execute(f"select codc from contenido where tipo='{tipo}'") # Ejecutamos la consulta para obtener los codigos
+    letra = tipo[0].lower() # Obtenemos la letra del tipo sacando el primer elemento como minuscula
+    lista = database[1].fetchall() # Obtenemos todos los codigos
+    if not lista: # Si la lista esta vacia
+        return 1 # Devolvemos el primer numero por el que empiezan los codigos
+    else: # En caso contrario es decir que la lista contenga algo
+        lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:])) # Ordenamos los valores de la lista por numeros de menor a mayor
+        resultado = lista_ordenada[len(lista_ordenada)-1][0] # Obtenemos el ultimo indice de la lista pero como es bidimensional el dato estara siempre en el primer indice
+        resultado = resultado.replace(letra,"") # Quitamos la letra
+        return int(resultado)+1 # Devolvemos el resultado mas uno como numero
 
 def generar_codigo_plataforma():
     """
