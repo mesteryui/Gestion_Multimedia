@@ -113,13 +113,28 @@ def modificar_episodios_totales(titulo, ep_totales):
     database[0].commit()
 
 
+def visto_un_episodio(titulo):
+    codigo = obtenercodigo_contenido(titulo)
+    database[1].execute(f"select episodios_vistos from episodios where codc='{codigo}'")
+    lista = int(database[1].fetchone()[0])+1
+    database[1].execute(f"update episodios set episodios_vistos={str(lista)} where codc='{codigo}'")
+    database[0].commit()
+
+
+def introducir_contenido_genero(titulo, genero):
+    codigo_cont = obtenercodigo_contenido(titulo)
+    codigo_gen = genero[0]
+    database[1].execute(f"insert into esde values('{codigo_cont}','{codigo_gen}')")
+    database[0].commit()
+
+
 def main():
     op1 = 0
     while op1 !=5:
         print("1.Introducir Datos\n2.Ver datos\n3.Eliminar Dato\n4.Actualizar dato\n5.Salir")
         op1 = int(input("Seleccione una opción: "))
         if op1 == 1:
-            print("1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido")
+            print("1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero")
             op2 = int(input())
             if op2 == 1:
                 titulo = input("Introduzca el titulo del contenido:")
@@ -130,8 +145,7 @@ def main():
                 codc = cod + str(num)
                 database[1].execute(f"insert into contenido values('{codc}','{titulo}','{descripcion}','{tipo}')")
                 database[0].commit()
-                if tipo == "Serie" or "Anime":
-                    print("Introduzca un numero:")
+                if tipo == "Serie" or tipo == "Anime":
                     episodios_totales = input("Dime cuantos episodios tiene el contenido:")
                     database[1].execute(f"insert into episodios values('{codc}',1,'{episodios_totales}')")
                     database[0].commit()
@@ -142,6 +156,8 @@ def main():
                         anadirepisodios_vistos(titulo, ep_vistos)
                     else:
                         continue
+                else:
+                    continue
             elif op2 == 2:
                 codpl = generar_codigo_plataforma()
                 nompl = input("Introduzca el nombre de la plataforma:")
@@ -157,6 +173,10 @@ def main():
                 titulo = input("Introduzca el titulo de la serie:")
                 nombre_plat = input("Introduzca el nombre de la plataforma")
                 insertar_contenido_plataforma(titulo,nombre_plat)
+            elif op2 == 6:
+                titulo = input("Introduzca el titulo:")
+                genero = input("Introduzca el genero:").title()
+                introducir_contenido_genero(titulo,genero)
 
 
         elif op1 == 2:
@@ -186,7 +206,7 @@ def main():
                     anadir_descripcion(titulo,descripcion)
 
             elif op8 == 2:
-                print("1.Episodios Vistos\n2.Episodios totales")
+                print("1.Episodios Vistos\n2.Episodios totales\n3.Visto un episodio")
                 op9 = int(input())
                 if op9 == 1:
                     titulo = input("Introduzca el titulo del anime/serie:")
@@ -196,12 +216,13 @@ def main():
                     titulo = input("Introduzca el titulo del anime/serie:")
                     ep_totales = input("Introduzca en numero los episodios vistos:")
                     modificar_episodios_totales(titulo, ep_totales)
+                elif op9==3:
+                    titulo = input("Introduzca el titulo del anime/serie:")
+                    visto_un_episodio(titulo)
+
 
 
 
 if __name__ == '__main__':
-    if database is psycopg2.Error:
-        exit(0)
-    else:
-        main()
-        cerrar_conexion(database)
+    main()
+    cerrar_conexion(database)
