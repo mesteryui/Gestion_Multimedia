@@ -1,6 +1,6 @@
 from accederBaseDatos import *
 
-database = conectar_base()
+database = conectar_base() # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 def anadir_descripcion(titulo,descripcion):
     """
     Añadir descripcion al contenido
@@ -252,5 +252,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    cerrar_conexion(database)
+    main() # Ejecutamos la funcion principal
+    cerrar_conexion(database) # Cerramos la conexion con la base de datos pasandole la base de datos

@@ -24,4 +24,4 @@ def cerrar_conexion(datab):
     conex = datab[0]
     curs = datab[1]
     if conex:
-        return conex.close(),curs.close()
+        conex.close(),curs.close()
