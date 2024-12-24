@@ -40,7 +40,7 @@ def generar_codigo_plataforma():
     return int(resultado) + 1 # Devolver el resultado de eso más 1 como entero
 
 def generar_codigo_genero(nomg):
-    return nomg[0]
+    return nomg[0].capitalize()
 
 def obtenercodigo_contenido(titulo):
     """
@@ -125,12 +125,16 @@ def modificar_episodios_totales(titulo, ep_totales):
 
 
 def visto_un_episodio(titulo):
+    """
+    Permite incrementar en ultimo un episodio visto
+    :param titulo: el titulo de la serie/anime o lo que sea
+    """
     codigo = obtenercodigo_contenido(titulo)
     database[1].execute(f"select episodios_vistos,episodios_totales from episodios where codc='{codigo}'")
     lista = database[1].fetchone()
     vistos = int(lista[0])+1
     totales = int(lista[1])
-    if vistos<totales:
+    if vistos<totales: # Si los episodios vistos son menos que el total entonces podemos añadir uno más
         database[1].execute(f"update episodios set episodios_vistos={str(vistos)} where codc='{codigo}'")
         database[0].commit()
     else:
@@ -190,7 +194,7 @@ def main():
                 database[0].commit()
             elif op2 == 3:
                 nombre_genero = input("Introduzca el nombre del genero:").title()
-                codg = generar_codigo_genero(nombre_genero).capitalize()
+                codg = generar_codigo_genero(nombre_genero)
                 database[1].execute(f"insert into generos values('{codg}','{nombre_genero}')")
                 database[0].commit()
             elif op2 == 4:
