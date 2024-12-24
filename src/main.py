@@ -47,7 +47,7 @@ def obtener_episodios_tipo_contenido(tipo):
     datos = database[1].fetchall()
     articul = "De las" if tipo=="Serie" else "De los"
     articul2 = "Del" if tipo=="Anime" else "De la"
-    print(f"De {articul} {tipo.lower()}s se tiene la siguiente informacion:\n")
+    print(f"{articul} {tipo.lower()}s se tiene la siguiente informacion:\n")
     for dato in datos:
         visto = 0 if dato[1] is None else dato[1]
         print(f"{articul2} {tipo.lower()} {dato[0]} se han visto {visto} de {dato[2]} episodios\n")
@@ -109,6 +109,12 @@ def anadirepisodios_vistos(titulo, ep_vistos):
     """
     codigo = obtenercodigo_contenido(titulo)
     database[1].execute(f"update episodios set episodios_vistos='{ep_vistos}' where codc='{codigo}'")
+    database[0].commit()
+
+
+def modificar_episodios_totales(titulo, ep_totales):
+    codigo = obtenercodigo_contenido(titulo)
+    database[1].execute(f"update episodios set episodios_totales='{ep_totales}' where codc='{codigo}'")
     database[0].commit()
 
 
@@ -186,9 +192,17 @@ def main():
                     anadir_descripcion(titulo,descripcion)
 
             elif op8 == 2:
-                titulo = input("Introduzca el titulo del anime/serie:")
-                ep_vistos = input("Introduzca en numero los episodios vistos:")
-                anadirepisodios_vistos(titulo,ep_vistos)
+                print("1.Episodios Vistos\n2.Episodios totales")
+                op9 = int(input())
+                if op9 == 1:
+                    titulo = input("Introduzca el titulo del anime/serie:")
+                    ep_vistos = input("Introduzca en numero los episodios vistos:")
+                    anadirepisodios_vistos(titulo,ep_vistos)
+                elif op9 == 2:
+                    titulo = input("Introduzca el titulo del anime/serie:")
+                    ep_totales = input("Introduzca en numero los episodios vistos:")
+                    modificar_episodios_totales(titulo, ep_totales)
+
 
 
 if __name__ == '__main__':
