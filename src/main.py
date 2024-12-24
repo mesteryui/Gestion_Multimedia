@@ -45,11 +45,12 @@ def obtenercodigo_contenido(titulo):
 def obtener_episodios_tipo_contenido(tipo):
     database[1].execute(f"select titulo,episodios_vistos,episodios_totales from contenido,episodios where episodios.codc=contenido.codc and tipo='{tipo}'")
     datos = database[1].fetchall()
-    articul = "las" if tipo=="Serie" else "los"
-    articul2 = "el" if tipo=="Anime" else "la"
+    articul = "De las" if tipo=="Serie" else "De los"
+    articul2 = "Del" if tipo=="Anime" else "De la"
     print(f"De {articul} {tipo.lower()}s se tiene la siguiente informacion:\n")
     for dato in datos:
-        print(f"De {articul2} {tipo.lower()} {dato[0]} se han visto {dato[1]} de {dato[2]} episodios\n")
+        visto = 0 if dato[1] is None else dato[1]
+        print(f"{articul2} {tipo.lower()} {dato[0]} se han visto {visto} de {dato[2]} episodios\n")
 
 def insertar_contenido_plataforma(titulo,nombreplataforma):
     """
@@ -123,7 +124,7 @@ def main():
             if op2 == 1:
                 titulo = input("Introduzca el titulo del contenido:")
                 descripcion = input("Introduzca descripcion del contenido:")
-                tipo = input("Introduzca el tipo de contenido")
+                tipo = input("Introduzca el tipo de contenido").title()
                 cod = tipo[0].lower()
                 num = generar_codigo_contenido(tipo)
                 codc = cod + str(num)
@@ -144,12 +145,12 @@ def main():
             elif op2 == 2:
                 codpl = generar_codigo_plataforma()
                 nompl = input("Introduzca el nombre de la plataforma:")
-                url = input("Introduzca el enlace de acceso a la plataforma:")
+                url = input("Introduzca el enlace de acceso a la plataforma:").title()
                 database[1].execute(f"insert into plataformas values('pl{codpl}','{nompl}','{url}')")
                 database[0].commit()
             elif op2 == 3:
-                nombre_genero = input("Introduzca el nombre del genero:")
-                codg = generar_codigo_genero(nombre_genero)
+                nombre_genero = input("Introduzca el nombre del genero:").title()
+                codg = generar_codigo_genero(nombre_genero).capitalize()
                 database[1].execute(f"insert into generos values('{codg}','{nombre_genero}')")
                 database[0].commit()
             elif op2 == 4:
