@@ -12,7 +12,7 @@ create table contenido(
 codc varchar(8),
 titulo varchar(255) not null,
 descripcion TEXT,
-visualizacion varchar(9), // Saber si estoy viendola o ya la he visto o esta por ver
+visualizacion varchar(9), /** Saber si estoy viendola o ya la he visto o esta por ver**/
 estado varchar(16), /**Si es una serie o anime saber si esta en Emision o ha finalizado**/
 tipo varchar(50) not null,
 primary key (codc)
