@@ -255,7 +255,7 @@ def main():
                 "1.Cuantos Episodios se han visto de un contenido especifico\n2.Saber cuantos episodios se han visto de animes/series\n3.En que plataforma veo contenido\n4.Cuanto contendio estoy viendo\n5.Cuanto he visto")
             op2 = int(input())
             if op2 == 1:
-                tipo = input("Digame el tipo de contenido:").title()
+                tipo = input("Dime el tipo de contenido:").title()
                 titulo = obtener_titulo_de_titulos(tipo)
                 episodios_saber(titulo)
             elif op2 == 2:
