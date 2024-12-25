@@ -1,6 +1,7 @@
 from accederBaseDatos import *
 
-database = conectar_base() # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
+database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
+
 
 def mostrar_contenido(tipo):
     """
@@ -8,10 +9,11 @@ def mostrar_contenido(tipo):
     :param tipo: el tipo de contenido
     :return: los contenidos
     """
-    database[1].execute(f"select titulo from contenido where tipo='{tipo}';")
-    contenidos = database[1].fetchall()
+    database[1].execute(
+        f"select titulo from contenido where tipo='{tipo}';")  # Obtener los titulos de todos los contenidos del tipo indicado
+    contenidos = database[1].fetchall()  # Guardamos esos contenidos
     num = 0
-    diccionario_titulos = {}
+    diccionario_titulos = {}  # Definimos un diccionario donde se guardaran los numeros
     for contenido in contenidos:
         num += 1
         diccionario_titulos[num] = contenido[0]
@@ -19,7 +21,15 @@ def mostrar_contenido(tipo):
 
     return diccionario_titulos
 
-def anadir_descripcion(titulo,descripcion):
+
+def obtener_titulo_de_titulos(tipo):
+    titulos = mostrar_contenido(tipo)
+    opcion = int(input("Introduzca una opcion en numero:"))
+    titulo = titulos.get(opcion, "No se")
+    return titulo
+
+
+def anadir_descripcion(titulo, descripcion):
     """
     Añadir descripcion al contenido
     :param titulo: el titulo del contenido
@@ -28,37 +38,44 @@ def anadir_descripcion(titulo,descripcion):
     database[1].execute(f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';")
     database[0].commit()
 
+
 def generar_codigo_contenido(tipo):
     """
     Pasando el tipo de contenido a añadir creamos el numero que se le añade al codigo
     :param tipo: el tipo de contenido a añadir
     :return: (numero ultimo codc)+1 o 1 si no existen codigos con la letra para ese tipo definido
     """
-    database[1].execute(f"select codc from contenido where tipo='{tipo}'") # Ejecutamos la consulta para obtener los codigos
-    letra = tipo[0].lower() # Obtenemos la letra del tipo sacando el primer elemento como minuscula
-    lista = database[1].fetchall() # Obtenemos todos los codigos
-    if not lista: # Si la lista esta vacia
-        return 1 # Devolvemos el primer numero por el que empiezan los codigos
-    else: # En caso contrario es decir que la lista contenga algo
-        lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:])) # Ordenamos los valores de la lista por numeros de menor a mayor
-        resultado = lista_ordenada[len(lista_ordenada)-1][0] # Obtenemos el ultimo indice de la lista pero como es bidimensional el dato estara siempre en el primer indice
-        resultado = resultado.replace(letra,"") # Quitamos la letra
-        return int(resultado)+1 # Devolvemos el resultado mas uno como numero
+    database[1].execute(
+        f"select codc from contenido where tipo='{tipo}'")  # Ejecutamos la consulta para obtener los codigos
+    letra = tipo[0].lower()  # Obtenemos la letra del tipo sacando el primer elemento como minuscula
+    lista = database[1].fetchall()  # Obtenemos todos los codigos
+    if not lista:  # Si la lista esta vacia
+        return 1  # Devolvemos el primer numero por el que empiezan los codigos
+    else:  # En caso contrario es decir que la lista contenga algo
+        lista_ordenada = sorted(lista, key=lambda x: int(
+            x[0][1:]))  # Ordenamos los valores de la lista por numeros de menor a mayor
+        resultado = lista_ordenada[len(lista_ordenada) - 1][
+            0]  # Obtenemos el ultimo indice de la lista pero como es bidimensional el dato estara siempre en el primer indice
+        resultado = resultado.replace(letra, "")  # Quitamos la letra
+        return int(resultado) + 1  # Devolvemos el resultado mas uno como numero
+
 
 def generar_codigo_plataforma():
     """
     Generar el codigo numerico para plataformas
     :return: el codigo numerico
     """
-    database[1].execute("select codpl from plataformas;") # Obtener los codigos de las plataformas
-    lista = database[1].fetchall() # Guardarlos en una lista
-    lista_ordenada = sorted(lista, key=lambda x: int(x[0][2:])) # Ordenar esa lista de menor a mayor numero
-    resultado = lista_ordenada[len(lista_ordenada) - 1][0] # Acceder al ultimo elemento de la lista
-    resultado = resultado.replace("pl","") # Quitarle los dos primeros caracters
-    return int(resultado) + 1 # Devolver el resultado de eso más 1 como entero
+    database[1].execute("select codpl from plataformas;")  # Obtener los codigos de las plataformas
+    lista = database[1].fetchall()  # Guardarlos en una lista
+    lista_ordenada = sorted(lista, key=lambda x: int(x[0][2:]))  # Ordenar esa lista de menor a mayor numero
+    resultado = lista_ordenada[len(lista_ordenada) - 1][0]  # Acceder al ultimo elemento de la lista
+    resultado = resultado.replace("pl", "")  # Quitarle los dos primeros caracters
+    return int(resultado) + 1  # Devolver el resultado de eso más 1 como entero
+
 
 def generar_codigo_genero(nomg):
     return nomg[0].capitalize()
+
 
 def obtenercodigo_contenido(titulo):
     """
@@ -70,17 +87,20 @@ def obtenercodigo_contenido(titulo):
     episodio = database[1].fetchone()
     return episodio[0]
 
+
 def obtener_episodios_tipo_contenido(tipo):
-    database[1].execute(f"select titulo,episodios_vistos,episodios_totales from contenido,episodios where episodios.codc=contenido.codc and tipo='{tipo}'")
+    database[1].execute(
+        f"select titulo,episodios_vistos,episodios_totales from contenido,episodios where episodios.codc=contenido.codc and tipo='{tipo}'")
     datos = database[1].fetchall()
-    articul = "De las" if tipo=="Serie" else "De los"
-    articul2 = "Del" if tipo=="Anime" else "De la"
+    articul = "De las" if tipo == "Serie" else "De los"
+    articul2 = "Del" if tipo == "Anime" else "De la"
     print(f"{articul} {tipo.lower()}s se tiene la siguiente informacion:\n")
     for dato in datos:
         visto = dato[1] or 0
         print(f"{articul2} {tipo.lower()} {dato[0]} se han visto {visto} de {dato[2]} episodios\n")
 
-def insertar_contenido_plataforma(titulo,nombreplataforma):
+
+def insertar_contenido_plataforma(titulo, nombreplataforma):
     """
     Insertar contenido a plataforma
     :param titulo: el titulo del contenido
@@ -92,6 +112,7 @@ def insertar_contenido_plataforma(titulo,nombreplataforma):
     codpl = database[1].fetchone()[0]
     database[1].execute(f"insert into disponible values('{codc}','{codpl}')")
     database[0].commit()
+
 
 def saber_plataforma_veo_contenido(titulo):
     """
@@ -115,12 +136,11 @@ def episodios_saber(titulo):
     Muestra la cantidad de episodios vistos de un contenido específico.
     :param titulo: Título del contenido
     """
-    database[1].execute(f"select episodios_vistos, episodios_totales from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';")
+    database[1].execute(
+        f"select episodios_vistos, episodios_totales from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';")
     episodios = database[1].fetchone()
     vistos = episodios[0] or 0
     print(f"De {titulo}: {vistos}/{episodios[1]} episodios vistos.\n")
-
-
 
 
 def anadirepisodios_vistos(titulo, ep_vistos):
@@ -148,21 +168,24 @@ def visto_un_episodio(titulo):
     codigo = obtenercodigo_contenido(titulo)
     database[1].execute(f"select episodios_vistos,episodios_totales from episodios where codc='{codigo}'")
     lista = database[1].fetchone()
-    vistos = int(lista[0])+1
+    vistos = int(lista[0]) + 1
     totales = int(lista[1])
-    if vistos<totales: # Si los episodios vistos son menos que el total entonces podemos añadir uno más
+    if vistos < totales:  # Si los episodios vistos son menos que el total entonces podemos añadir uno más
         database[1].execute(f"update episodios set episodios_vistos={str(vistos)} where codc='{codigo}'")
         database[0].commit()
     else:
         print("Si añadimos un visto más la cantidad de vistos superara al total de episodios")
 
+
 def cuantos_veo_y_visto_contenido(tipo):
     letra = tipo[0].lower()
-    database[1].execute(f"select count(codc) from contenido where codc in (select codc from contenido where codc like '{letra}%') and codc in (select codc from episodios where episodios_vistos<episodios_totales);")
+    database[1].execute(
+        f"select count(codc) from contenido where codc in (select codc from contenido where codc like '{letra}%') and codc in (select codc from episodios where episodios_vistos<episodios_totales);")
     viendo = database[1].fetchone()
-    database[1].execute(f"select count(codc) from contenido where codc in (select codc from contenido where codc like '{letra}%') and codc in (select codc from episodios where episodios_vistos=episodios_totales);")
+    database[1].execute(
+        f"select count(codc) from contenido where codc in (select codc from contenido where codc like '{letra}%') and codc in (select codc from episodios where episodios_vistos=episodios_totales);")
     visto = database[1].fetchone()
-    return viendo[0],visto[0]
+    return viendo[0], visto[0]
 
 
 def introducir_contenido_genero(titulo, genero):
@@ -174,11 +197,12 @@ def introducir_contenido_genero(titulo, genero):
 
 def main():
     op1 = 0
-    while op1 !=5:
+    while op1 != 5:
         print("1.Introducir Datos\n2.Ver datos\n3.Eliminar Dato\n4.Actualizar dato\n5.Salir")
         op1 = int(input("Seleccione una opción: "))
         if op1 == 1:
-            print("1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero")
+            print(
+                "1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero")
             op2 = int(input())
             if op2 == 1:
                 titulo = input("Introduzca el titulo del contenido:")
@@ -216,11 +240,11 @@ def main():
             elif op2 == 4:
                 titulo = input("Introduzca el titulo de la serie:")
                 nombre_plat = input("Introduzca el nombre de la plataforma")
-                insertar_contenido_plataforma(titulo,nombre_plat)
+                insertar_contenido_plataforma(titulo, nombre_plat)
             elif op2 == 6:
                 titulo = input("Introduzca el titulo:")
                 genero = input("Introduzca el genero:").title()
-                introducir_contenido_genero(titulo,genero)
+                introducir_contenido_genero(titulo, genero)
 
 
         elif op1 == 2:
@@ -229,9 +253,7 @@ def main():
             op2 = int(input())
             if op2 == 1:
                 tipo = input("Digame el tipo de contenido:").title()
-                titulos = mostrar_contenido(tipo)
-                opcion = int(input("Introduzca una opcion:"))
-                titulo = titulos.get(opcion,"No se")
+                obtener_titulo_de_titulos(tipo)
                 episodios_saber(titulo)
             elif op2 == 2:
                 tipo = input("Introduce el tipo de contenido")
@@ -252,9 +274,10 @@ def main():
                 print("1.Añadir descripcion")
                 op9 = int(input())
                 if op9 == 1:
-                    titulo = input("Introduce el titulo del contenido al que deseas añadir la descripcion:")
+                    tipo = input("Digame el tipo de contenido del que desea añadir una descripcion:")
+                    titulo = obtener_titulo_de_titulos(tipo)
                     descripcion = input("Introduce la descripcion a añadir")
-                    anadir_descripcion(titulo,descripcion)
+                    anadir_descripcion(titulo, descripcion)
 
             elif op8 == 2:
                 print("1.Episodios Vistos\n2.Episodios totales\n3.Visto un episodio")
@@ -267,16 +290,12 @@ def main():
                     titulo = input("Introduzca el titulo del anime/serie:")
                     ep_totales = input("Introduzca en numero los episodios vistos:")
                     modificar_episodios_totales(titulo, ep_totales)
-                elif op9==3:
+                elif op9 == 3:
                     tipo = input("Digame el tipo de contenido:").title()
-                    titulos = mostrar_contenido(tipo)
-                    opcion = int(input("Introduzca una opcion:"))
-                    titulo = titulos.get(opcion, "No se")
+                    titulo = obtener_titulo_de_titulos(tipo)
                     visto_un_episodio(titulo)
 
 
-
-
 if __name__ == '__main__':
-    main() # Ejecutamos la funcion principal
-    cerrar_conexion(database) # Cerramos la conexion con la base de datos pasandole la base de datos
+    main()  # Ejecutamos la funcion principal
+    cerrar_conexion(database)  # Cerramos la conexion con la base de datos pasandole la base de datos
