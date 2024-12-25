@@ -168,9 +168,7 @@ def pasar_temporada_letra(temporada):
         13: "decimotercera",
         14: "decimocuarta",
         15: "decimoquinta",
-        16: "decimosexta",
-        17: "decimoseptima",
-        18: "decimooctava"
+        16: "decimosexta"
     }
     return temporadas.get(temporada,"muchas despues")
 
