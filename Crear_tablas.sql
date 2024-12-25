@@ -12,8 +12,7 @@ create table contenido(
 codc varchar(8),
 titulo varchar(255) not null,
 descripcion TEXT,
-visualizacion varchar(9), /** Saber si estoy viendola o ya la he visto o esta por ver**/
-estado varchar(16), /**Si es una serie o anime saber si esta en Emision o ha finalizado**/
+visualizacion varchar(9), /** Saber si estoy viendola o ya la he visto o esta por ver para peliculas**/
 tipo varchar(50) not null,
 primary key (codc)
 );
@@ -23,6 +22,8 @@ codc varchar(8),
 temporada int, /** Aqui se añddiria el numero de temporada de esta manera se identificara a partir de la serie y la temporada**/
 episodios_totales int NOT NULL,
 episodios_vistos int,
+visualizacion varchar(9),
+estado varchar(16), /**Si es una serie o anime saber si esta en Emision o ha finalizado**/
 primary key(codc,temporada),
 foreign key(codc) references contenido(codc)
 );

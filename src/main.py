@@ -138,6 +138,31 @@ def saber_plataforma_veo_contenido(titulo):
         else:
             print(f"La {tipo} {titulo} es vista desde {plataforma[0]} cuya url es {plataforma[1]}\n")
 
+def episodios_saber_temporada(titulo,temporada):
+    database[1].execute(
+        f"select episodios_vistos, episodios_totales from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}' and temporada={temporada};")
+    episodios = database[1].fetchall()
+    temporadas = {
+        1: "primera",
+        2: "segunda",
+        3: "tercera",
+        4: "cuarta",
+        5: "quinta",
+        6: "sexta",
+        7: "séptima",
+        8: "octava",
+        9: "novena",
+        10: "décima",
+        11: "undécima",
+        12: "duodécima",
+        13: "decimotercera",
+        14: "decimocuarta",
+        15: "decimoquinta",
+        16: "decimosexta"
+    }
+    temporada = temporadas.get(temporada, "muchas despues")
+    vistos = episodios[0] or 0
+    print(f"De {titulo} en su {temporada} temporada: {vistos}/{episodios[0][1]} episodios vistos.\n")
 
 def episodios_saber(titulo):
     """
@@ -145,10 +170,30 @@ def episodios_saber(titulo):
     :param titulo: Título del contenido
     """
     database[1].execute(
-        f"select episodios_vistos, episodios_totales from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';")
-    episodios = database[1].fetchone()
-    vistos = episodios[0] or 0
-    print(f"De {titulo}: {vistos}/{episodios[1]} episodios vistos.\n")
+        f"select episodios_vistos, episodios_totales,temporada from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';")
+    episodios = database[1].fetchall()
+    temporadas = {
+        1: "primera",
+        2: "segunda",
+        3: "tercera",
+        4: "cuarta",
+        5: "quinta",
+        6: "sexta",
+        7: "séptima",
+        8: "octava",
+        9: "novena",
+        10: "décima",
+        11: "undécima",
+        12: "duodécima",
+        13: "decimotercera",
+        14: "decimocuarta",
+        15: "decimoquinta",
+        16: "decimosexta"
+    }
+    for episodio in episodios:
+        vistos = episodio[0] or 0
+        temporada = temporadas.get(episodio[2],"muchas despues")
+        print(f"De {titulo} en su {temporada} temporada: {vistos}/{episodio[1]} episodios vistos.\n")
 
 
 def anadirepisodios_vistos(titulo, ep_vistos):
@@ -168,18 +213,18 @@ def modificar_episodios_totales(titulo, ep_totales):
     database[0].commit()
 
 
-def visto_un_episodio(titulo):
+def visto_un_episodio(titulo,temporada):
     """
     Permite incrementar en ultimo un episodio visto
     :param titulo: el titulo de la serie/anime o lo que sea
     """
     codigo = obtenercodigo_contenido(titulo)
-    database[1].execute(f"select episodios_vistos,episodios_totales from episodios where codc='{codigo}'")
+    database[1].execute(f"select episodios_vistos,episodios_totales from episodios where codc='{codigo}' and temporada={temporada}")
     lista = database[1].fetchone()
     vistos = int(lista[0]) + 1
     totales = int(lista[1])
     if vistos < totales:  # Si los episodios vistos son menos que el total entonces podemos añadir uno más
-        database[1].execute(f"update episodios set episodios_vistos={str(vistos)} where codc='{codigo}'")
+        database[1].execute(f"update episodios set episodios_vistos={str(vistos)} where codc='{codigo}' and temporada={temporada}")
         database[0].commit()
     else:
         print("Si añadimos un visto más la cantidad de vistos superara al total de episodios")
@@ -219,20 +264,30 @@ def main():
                 cod = tipo[0].lower()
                 num = generar_codigo_contenido(tipo)
                 codc = cod + str(num)
-                database[1].execute(f"insert into contenido values('{codc}','{titulo}','{descripcion}','{tipo}')")
+                database[1].execute(f"insert into contenido values('{codc}','{titulo}','{descripcion}',null,'{tipo}')")
                 database[0].commit()
                 if tipo == "Serie" or tipo == "Anime":
+                    temporada = input("Digame en numero la temporada:")
                     episodios_totales = input("Dime cuantos episodios tiene el contenido:")
-                    database[1].execute(f"insert into episodios values('{codc}',1,'{episodios_totales}')")
+                    visualizacion = input("Dime la visualizacion (si esta visto o no):")
+                    database[1].execute(f"insert into episodios values('{codc}',{temporada},'{episodios_totales}',null,'{visualizacion}')")
                     database[0].commit()
-                    opcion = input("Desea añadir los episodios vistos en caso de que haya visto alguno:")
-                    opcion = opcion.lower()
-                    if opcion == "si":
-                        ep_vistos = input("Introduzca los episodios vistos:")
-                        anadirepisodios_vistos(titulo, ep_vistos)
+                    if visualizacion.lower() == "visto":
+                        ep_totales = database[1].execute(f"select episodios_totales from episodios where codc='{codc}';").fetchone()[0]
+                        database[1].execute(f"update episodios set episodios_vistos={ep_totales} where codc='{codc}'")
+                        database[0].commit()
                     else:
-                        continue
+                        opcion = input("Desea añadir los episodios vistos en caso de que haya visto alguno:")
+                        opcion = opcion.lower()
+                        if opcion == "si":
+                            ep_vistos = input("Introduzca los episodios vistos:")
+                            anadirepisodios_vistos(titulo, ep_vistos)
+                        else:
+                            continue
                 else:
+                    visualizacion = input("Dime la visualizacion (si esta visto o no):").title()
+                    database[1].execute(f"update contenido set visualizacion={visualizacion} where codc='{codc}'")
+                    database[0].commit()
                     continue
             elif op2 == 2:
                 codpl = generar_codigo_plataforma()
