@@ -13,8 +13,8 @@ def mostrar_contenido(tipo):
     num = 0
     dict = {}
     for contenido in contenidos:
-        dict[num] = contenido
         num += 1
+        dict[num] = contenido[0]
         print(f"{num}.{contenido[0]}")
 
     return dict
@@ -231,7 +231,7 @@ def main():
                 tipo = input("Digame el tipo de contenido:").title()
                 titulos = mostrar_contenido(tipo)
                 opcion = int(input("Introduzca una opcion:"))
-                titulo = titulos.get(opcion-1,"No se")[0]
+                titulo = titulos.get(opcion,"No se")
                 episodios_saber(titulo)
             elif op2 == 2:
                 tipo = input("Introduce el tipo de contenido")
@@ -268,7 +268,10 @@ def main():
                     ep_totales = input("Introduzca en numero los episodios vistos:")
                     modificar_episodios_totales(titulo, ep_totales)
                 elif op9==3:
-                    titulo = input("Introduzca el titulo del anime/serie:")
+                    tipo = input("Digame el tipo de contenido:").title()
+                    titulos = mostrar_contenido(tipo)
+                    opcion = int(input("Introduzca una opcion:"))
+                    titulo = titulos.get(opcion, "No se")
                     visto_un_episodio(titulo)
 
 
