@@ -147,6 +147,11 @@ def episodios_saber_temporada(titulo,temporada):
     print(f"De {titulo} en su {temporad} temporad: {vistos}/{episodios[0][1]} episodios vistos.\n")
 
 def pasar_temporada_letra(temporada):
+    """
+    Pasa las temporadas a un formato letra tipo primera temporada y demás
+    :param temporada: la temporada en numero
+    :return: la temporada en letra
+    """
     temporadas = {
         1: "primera",
         2: "segunda",
@@ -213,7 +218,7 @@ def visto_un_episodio(titulo,temporada):
     lista = database[1].fetchone()
     vistos = int(lista[0]) + 1
     totales = int(lista[1])
-    if vistos < totales:  # Si los episodios vistos son menos que el total entonces podemos añadir uno más
+    if vistos <= totales:  # Si los episodios vistos son menos que el total entonces podemos añadir uno más
         database[1].execute(f"update episodios set episodios_vistos={str(vistos)} where codc='{codigo}' and temporada={temporada}")
         database[0].commit()
     else:
@@ -235,6 +240,12 @@ def introducir_contenido_genero(titulo, genero):
     codigo_cont = obtenercodigo_contenido(titulo)
     codigo_gen = generar_codigo_genero(genero)
     database[1].execute(f"insert into esde values('{codigo_cont}','{codigo_gen}')")
+    database[0].commit()
+
+
+def insertar_temporada(titulo, temporada,ep_totales, ep_vistos, visualizacion, estado):
+    codc = obtenercodigo_contenido(titulo)
+    database[1].execute(f"insert into episodios values('{codc}',{temporada},{ep_totales},{ep_vistos},'{visualizacion}','{estado}')")
     database[0].commit()
 
 
@@ -267,9 +278,9 @@ def main():
                         database[1].execute(f"update episodios set episodios_vistos={ep_totales} where codc='{codc}'")
                         database[0].commit()
                     else:
-                        opcion = input("Desea añadir los episodios vistos en caso de que haya visto alguno:")
-                        opcion = opcion.lower()
-                        if opcion == "si":
+                        titulo = input("Desea añadir los episodios vistos en caso de que haya visto alguno:")
+                        titulo = titulo.lower()
+                        if titulo == "si":
                             ep_vistos = input("Introduzca los episodios vistos:")
                             anadirepisodios_vistos(titulo, ep_vistos,temporada)
                         else:
@@ -298,6 +309,15 @@ def main():
                 titulo = input("Introduzca el titulo:")
                 genero = input("Introduzca el genero:").title()
                 introducir_contenido_genero(titulo, genero)
+            elif op2 == 7:
+                tipo = input("Introduzca el tipo de contenido:").title()
+                titulo = obtener_titulo_de_titulos(tipo)
+                temporada = input("Inserte temporada en numero:")
+                ep_totales = input("Introduzca los episodios totales en numero:")
+                ep_vistos = input("Introduzca los episodios vistos en numero:")
+                visualizacion = input("Introduzca visualizacion:")
+                estado = input("Introduzca estado(En emision,Finalizado):")
+                insertar_temporada(titulo,temporada,ep_totales,ep_vistos,visualizacion,estado)
 
 
         elif op1 == 2:
