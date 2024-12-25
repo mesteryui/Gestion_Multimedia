@@ -188,7 +188,9 @@ def episodios_saber(titulo):
         13: "decimotercera",
         14: "decimocuarta",
         15: "decimoquinta",
-        16: "decimosexta"
+        16: "decimosexta",
+        17: "decimoseptima",
+        18: "decimooctava"
     }
     for episodio in episodios:
         vistos = episodio[0] or 0
