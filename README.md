@@ -5,6 +5,9 @@
 >debido a eso aparece una cuenta que tengo por los estudios
 >Informo que las dos cuentas corresponden a mi
 
+Aviso que las pruebas la estoy haciendo con la base de datos que ya tengo y que además hay algunas cosas que no he corregido
+debido a eso el programa puede no estar adaptado al script que estoy creando
+
 ## Tecnologias utilizadas:
 - [PostgreSQL](https://www.postgresql.org/): Sistema de base de datos utilizado
 - [Python](https://www.python.org/): Lenguaje de programacion utilizado
