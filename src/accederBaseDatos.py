@@ -1,4 +1,4 @@
-import psycopg2
+import psycopg
 import xml.etree.ElementTree as ET
 
 def obtener_raiz():
@@ -8,7 +8,7 @@ def obtener_raiz():
 def conectar_base():
     raiz = obtener_raiz()
     try:
-        conexion = psycopg2.connect(
+        conexion = psycopg.connect(
             host=raiz.find("host").text,
             database=raiz.find("database").text,
             user=raiz.find("user").text,
@@ -16,7 +16,7 @@ def conectar_base():
         )
         cursor = conexion.cursor()
         return conexion,cursor
-    except psycopg2.Error as e:
+    except psycopg.Error as e:
         print("Error al insertar datos:", e)
         return e
 
