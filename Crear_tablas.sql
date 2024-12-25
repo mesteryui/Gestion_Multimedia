@@ -20,7 +20,7 @@ primary key (codc)
 
 create table episodios(
 codc varchar(8),
-temporada int, // Aqui se añddiria el numero de temporada de esta manera se identificara a partir de la serie y la temporada
+temporada int, /** Aqui se añddiria el numero de temporada de esta manera se identificara a partir de la serie y la temporada**/
 episodios_totales int NOT NULL,
 episodios_vistos int,
 primary key(codc,temporada),
