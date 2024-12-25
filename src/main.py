@@ -245,7 +245,7 @@ def main():
         op1 = int(input("Seleccione una opción: "))
         if op1 == 1:
             print(
-                "1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero")
+                "1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero\n7.Añadir nueva temporada a una serie")
             op2 = int(input())
             if op2 == 1:
                 titulo = input("Introduzca el titulo del contenido:")
@@ -271,7 +271,7 @@ def main():
                         opcion = opcion.lower()
                         if opcion == "si":
                             ep_vistos = input("Introduzca los episodios vistos:")
-                            anadirepisodios_vistos(titulo, ep_vistos)
+                            anadirepisodios_vistos(titulo, ep_vistos,temporada)
                         else:
                             continue
                 else:
