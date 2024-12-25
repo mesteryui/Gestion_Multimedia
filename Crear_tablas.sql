@@ -1,17 +1,3 @@
-/**
-Informo que lo que hay desarrollado de programa todavia no esta adaptado para algunas de las cosas que se han definido aqui
-por eso insto a colaborar ya que es un desarrollo grande
-**/
-DO $$
-BEGIN
-   IF NOT EXISTS (
-      SELECT FROM pg_database WHERE datname = 'contenido_audiovisual'
-   ) THEN
-      PERFORM pg_create_physical_replication_slot('contenido_audiovisual');
-   END IF;
-END
-$$;
-
 /** Eliminar tablas si existen previamente**/
 drop table if exists contenido cascade;
 drop table if exists episodios cascade;
@@ -65,7 +51,7 @@ foreign key (codg) references generos
 create table disponible(
 codc varchar(8),
 codpl varchar(10),
-url_disponible varchar(400), /**La url dentro de la plataforma donde se encuentra la serie por ejemplo 
+url_disponible varchar(400), /**La url dentro de la plataforma donde se encuentra la serie por ejemplo
 si esta en Netfilix esto incluiria la url de Netflix y el resto hasta la serie no se como hacerlo de forma que coja la url de plataformas y le añada lo que necesito**/
 primary key (codc,codpl),
 foreign key (codc) references contenido,
