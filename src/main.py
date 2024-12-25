@@ -12,7 +12,7 @@ def mostrar_contenido(tipo):
     contenidos = database[1].execute(
         f"select titulo from contenido where tipo='{tipo}';").fetchall()  # Guardamos esos contenidos
     num = 0
-    diccionario_titulos = {}  # Definimos un diccionario donde se guardaran los numeros
+    diccionario_titulos = dict() # Definimos un diccionario donde se guardaran los numeros
     for contenido in contenidos:
         num += 1
         diccionario_titulos[num] = contenido[0]
