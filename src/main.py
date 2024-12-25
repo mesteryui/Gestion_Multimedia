@@ -9,9 +9,8 @@ def mostrar_contenido(tipo):
     :param tipo: el tipo de contenido
     :return: los contenidos
     """
-    database[1].execute(
-        f"select titulo from contenido where tipo='{tipo}';")  # Obtener los titulos de todos los contenidos del tipo indicado
-    contenidos = database[1].fetchall()  # Guardamos esos contenidos
+    contenidos = database[1].execute(
+        f"select titulo from contenido where tipo='{tipo}';").fetchall()  # Guardamos esos contenidos
     num = 0
     diccionario_titulos = {}  # Definimos un diccionario donde se guardaran los numeros
     for contenido in contenidos:
