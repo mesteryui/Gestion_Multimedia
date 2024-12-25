@@ -11,13 +11,13 @@ def mostrar_contenido(tipo):
     database[1].execute(f"select titulo from contenido where tipo='{tipo}';")
     contenidos = database[1].fetchall()
     num = 0
-    dict = {}
+    diccionario_titulos = {}
     for contenido in contenidos:
         num += 1
-        dict[num] = contenido[0]
+        diccionario_titulos[num] = contenido[0]
         print(f"{num}.{contenido[0]}")
 
-    return dict
+    return diccionario_titulos
 
 def anadir_descripcion(titulo,descripcion):
     """
