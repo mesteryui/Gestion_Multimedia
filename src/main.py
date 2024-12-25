@@ -1,6 +1,24 @@
 from accederBaseDatos import *
 
 database = conectar_base() # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
+
+def mostrar_contenido(tipo):
+    """
+    Pasandole el tipo de contenido nos muestra tod-o lo que hay de ese contenido
+    :param tipo: el tipo de contenido
+    :return: los contenidos
+    """
+    database[1].execute(f"select titulo from contenido where tipo='{tipo}';")
+    contenidos = database[1].fetchall()
+    num = 0
+    dict = {}
+    for contenido in contenidos:
+        dict[num] = contenido
+        num += 1
+        print(f"{num}.{contenido[0]}")
+
+    return dict
+
 def anadir_descripcion(titulo,descripcion):
     """
     Añadir descripcion al contenido
@@ -59,7 +77,7 @@ def obtener_episodios_tipo_contenido(tipo):
     articul2 = "Del" if tipo=="Anime" else "De la"
     print(f"{articul} {tipo.lower()}s se tiene la siguiente informacion:\n")
     for dato in datos:
-        visto = 0 if dato[1] is None else dato[1]
+        visto = dato[1] or 0
         print(f"{articul2} {tipo.lower()} {dato[0]} se han visto {visto} de {dato[2]} episodios\n")
 
 def insertar_contenido_plataforma(titulo,nombreplataforma):
@@ -97,9 +115,7 @@ def episodios_saber(titulo):
     Muestra la cantidad de episodios vistos de un contenido específico.
     :param titulo: Título del contenido
     """
-    database[1].execute(
-        f"SELECT episodios_vistos, episodios_totales FROM contenido JOIN episodios ON contenido.codc = episodios.codc WHERE titulo='{titulo}'"
-    )
+    database[1].execute(f"select episodios_vistos, episodios_totales from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';")
     episodios = database[1].fetchone()
     vistos = episodios[0] or 0
     print(f"De {titulo}: {vistos}/{episodios[1]} episodios vistos.\n")
@@ -151,7 +167,7 @@ def cuantos_veo_y_visto_contenido(tipo):
 
 def introducir_contenido_genero(titulo, genero):
     codigo_cont = obtenercodigo_contenido(titulo)
-    codigo_gen = genero[0]
+    codigo_gen = generar_codigo_genero(genero)
     database[1].execute(f"insert into esde values('{codigo_cont}','{codigo_gen}')")
     database[0].commit()
 
@@ -188,8 +204,8 @@ def main():
                     continue
             elif op2 == 2:
                 codpl = generar_codigo_plataforma()
-                nompl = input("Introduzca el nombre de la plataforma:")
-                url = input("Introduzca el enlace de acceso a la plataforma:").title()
+                nompl = input("Introduzca el nombre de la plataforma:").title()
+                url = input("Introduzca el enlace de acceso a la plataforma:")
                 database[1].execute(f"insert into plataformas values('pl{codpl}','{nompl}','{url}')")
                 database[0].commit()
             elif op2 == 3:
@@ -209,10 +225,13 @@ def main():
 
         elif op1 == 2:
             print(
-                "1.Cuantos Episodios se han visto de un anime/serie especifico\n2.Saber cuantos episodios se han visto de animes/series\n3.En que plataforma veo contenido\n4.Cuanto contendio estoy viendo\n5.Cuanto he visto")
+                "1.Cuantos Episodios se han visto de un contenido especifico\n2.Saber cuantos episodios se han visto de animes/series\n3.En que plataforma veo contenido\n4.Cuanto contendio estoy viendo\n5.Cuanto he visto")
             op2 = int(input())
             if op2 == 1:
-                titulo = input("Titulo de la serie/anime:")
+                tipo = input("Digame el tipo de contenido:").title()
+                titulos = mostrar_contenido(tipo)
+                opcion = int(input("Introduzca una opcion:"))
+                titulo = titulos.get(opcion-1,"No se")[0]
                 episodios_saber(titulo)
             elif op2 == 2:
                 tipo = input("Introduce el tipo de contenido")
