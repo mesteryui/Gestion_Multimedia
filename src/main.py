@@ -24,8 +24,12 @@ def mostrar_contenido(tipo):
 def obtener_titulo_de_titulos(tipo):
     titulos = mostrar_contenido(tipo)
     opcion = int(input("Introduzca una opcion en numero:"))
-    titulo = titulos.get(opcion, "No se")
-    return titulo
+    titulo = titulos.get(opcion, "nose")
+    if titulo == "nose":
+        print("Lo siento esa opcion no es valida")
+        main()
+    else:
+        return titulo
 
 
 def anadir_descripcion(titulo, descripcion):
