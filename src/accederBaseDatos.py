@@ -1,27 +1,34 @@
 import psycopg
 import xml.etree.ElementTree as ET
 
+from psycopg import ClientCursor
+
+
 def obtener_raiz():
     arbol = ET.parse("credentials.xml")
     return arbol.getroot()
+
 
 def conectar_base():
     raiz = obtener_raiz()
     try:
         conexion = psycopg.connect(
             host=raiz.find("host").text,
-            database=raiz.find("database").text,
+            dbname=raiz.find("database").text,
             user=raiz.find("user").text,
             password=raiz.find("password").text
         )
+        client_cursor = ClientCursor(conexion)
         cursor = conexion.cursor()
-        return conexion,cursor
+        return conexion, cursor, client_cursor
     except psycopg.Error as e:
         print("Error al insertar datos:", e)
         return e
 
+
 def cerrar_conexion(datab):
     conex = datab[0]
     curs = datab[1]
+    curs_client = datab[2]
     if conex:
-        conex.close(),curs.close()
+        conex.close(), curs.close(), curs_client.close()

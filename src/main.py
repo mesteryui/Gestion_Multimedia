@@ -35,7 +35,7 @@ def anadir_descripcion(titulo, descripcion):
     :param titulo: el titulo del contenido
     :param descripcion: la descipcion a añadir
     """
-    database[1].execute(f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';")
+    database[2].execute(f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';")
     database[0].commit()
 
 
@@ -110,7 +110,7 @@ def insertar_contenido_plataforma(titulo, nombreplataforma):
     codc = obtenercodigo_contenido(titulo)
     database[1].execute(f"select codpl from plataformas where nomg='{nombreplataforma}'")
     codpl = database[1].fetchone()[0]
-    database[1].execute(f"insert into disponible values('{codc}','{codpl}')")
+    database[2].execute(f"insert into disponible values('{codc}','{codpl}')")
     database[0].commit()
 
 
@@ -150,13 +150,13 @@ def anadirepisodios_vistos(titulo, ep_vistos):
     :param ep_vistos: los episodios vistos
     """
     codigo = obtenercodigo_contenido(titulo)
-    database[1].execute(f"update episodios set episodios_vistos='{ep_vistos}' where codc='{codigo}'")
+    database[2].execute(f"update episodios set episodios_vistos='{ep_vistos}' where codc='{codigo}'")
     database[0].commit()
 
 
 def modificar_episodios_totales(titulo, ep_totales):
     codigo = obtenercodigo_contenido(titulo)
-    database[1].execute(f"update episodios set episodios_totales='{ep_totales}' where codc='{codigo}'")
+    database[2].execute(f"update episodios set episodios_totales='{ep_totales}' where codc='{codigo}'")
     database[0].commit()
 
 
@@ -171,7 +171,7 @@ def visto_un_episodio(titulo):
     vistos = int(lista[0]) + 1
     totales = int(lista[1])
     if vistos < totales:  # Si los episodios vistos son menos que el total entonces podemos añadir uno más
-        database[1].execute(f"update episodios set episodios_vistos={str(vistos)} where codc='{codigo}'")
+        database[2].execute(f"update episodios set episodios_vistos={str(vistos)} where codc='{codigo}'")
         database[0].commit()
     else:
         print("Si añadimos un visto más la cantidad de vistos superara al total de episodios")
@@ -191,7 +191,7 @@ def cuantos_veo_y_visto_contenido(tipo):
 def introducir_contenido_genero(titulo, genero):
     codigo_cont = obtenercodigo_contenido(titulo)
     codigo_gen = generar_codigo_genero(genero)
-    database[1].execute(f"insert into esde values('{codigo_cont}','{codigo_gen}')")
+    database[2].execute(f"insert into esde values('{codigo_cont}','{codigo_gen}')")
     database[0].commit()
 
 
@@ -235,7 +235,7 @@ def main():
             elif op2 == 3:
                 nombre_genero = input("Introduzca el nombre del genero:").title()
                 codg = generar_codigo_genero(nombre_genero)
-                database[1].execute(f"insert into generos values('{codg}','{nombre_genero}')")
+                database[2].execute(f"insert into generos values('{codg}','{nombre_genero}')")
                 database[0].commit()
             elif op2 == 4:
                 titulo = input("Introduzca el titulo de la serie:")
@@ -253,7 +253,7 @@ def main():
             op2 = int(input())
             if op2 == 1:
                 tipo = input("Digame el tipo de contenido:").title()
-                obtener_titulo_de_titulos(tipo)
+                titulo = obtener_titulo_de_titulos(tipo)
                 episodios_saber(titulo)
             elif op2 == 2:
                 tipo = input("Introduce el tipo de contenido")
