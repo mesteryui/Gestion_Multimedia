@@ -22,6 +22,11 @@ def mostrar_contenido(tipo):
 
 
 def obtener_titulo_de_titulos(tipo):
+    """
+    Obtiene el titulo que le indiquemos aprovechando la funcion mostrar_contenido
+    :param tipo: el tipo de contenido lo necesitamos para la funcion mostrar_contenido
+    :return: el titulo si tod salio bien si no vuelve a iniciar la funcion main
+    """
     titulos = mostrar_contenido(tipo)
     opcion = int(input("Introduzca una opcion en numero:"))
     titulo = titulos.get(opcion, "nose")

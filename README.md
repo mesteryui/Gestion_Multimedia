@@ -14,7 +14,7 @@ debido a eso el programa puede no estar adaptado al script que estoy creando
 - [psycopg](https://pypi.org/project/psycopg/): Sistema para conectar la base de datos con el programa y hacer operaciones
 
 ## Credenciales
-Las credenciales se almacenan en un XML con la siguiente estructura:
+Las credenciales se almacenan en un XML llamado `credentials.xml` con la siguiente estructura:
 ```xml
 <credentials>
     <user>nombre_usuario</user>
