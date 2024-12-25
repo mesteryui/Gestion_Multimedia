@@ -8,4 +8,4 @@
 ## Tecnologias utilizadas:
 - [PostgreSQL](https://www.postgresql.org/): Sistema de base de datos utilizado
 - [Python](https://www.python.org/): Lenguaje de programacion utilizado
-- psycopg2 : Sistema para conectar la base de datos con el programa y hacer operaciones
+- [psycopg2](https://pypi.org/project/psycopg2/): Sistema para conectar la base de datos con el programa y hacer operaciones
