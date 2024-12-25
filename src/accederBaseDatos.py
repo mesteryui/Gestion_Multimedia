@@ -1,8 +1,6 @@
 import psycopg
 import xml.etree.ElementTree as ET
 
-from psycopg import ClientCursor
-
 
 def obtener_raiz():
     arbol = ET.parse("credentials.xml")
@@ -18,7 +16,7 @@ def conectar_base():
             user=raiz.find("user").text,
             password=raiz.find("password").text
         )
-        client_cursor = ClientCursor(conexion)
+        client_cursor = psycopg.ClientCursor(conexion)
         cursor = conexion.cursor()
         return conexion, cursor, client_cursor
     except psycopg.Error as e:
