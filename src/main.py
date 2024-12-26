@@ -140,7 +140,7 @@ def saber_plataforma_veo_contenido(titulo):
 
 def episodios_saber_temporada(titulo,temporada):
     database[1].execute(
-        f"select episodios_vistos, episodios_totales from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}' and temporad={temporad};")
+        f"select episodios_vistos, episodios_totales from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}' and temporad={temporada};")
     episodios = database[1].fetchall()
     temporad = pasar_temporada_letra(temporada)
     vistos = episodios[0] or 0
@@ -205,6 +205,7 @@ def modificar_episodios_totales(titulo, ep_totales,temporada):
     database[0].commit()
 
 
+
 def visto_un_episodio(titulo,temporada):
     """
     Permite incrementar en ultimo un episodio visto
@@ -241,11 +242,22 @@ def introducir_contenido_genero(titulo, genero):
     database[0].commit()
 
 
-def insertar_temporada(titulo, temporada,ep_totales, ep_vistos, visualizacion, estado):
+def insertar_temporada(titulo, temporada,ep_totales, ep_vistos, estado,visualizacion):
     codc = obtenercodigo_contenido(titulo)
-    database[1].execute(f"insert into episodios values('{codc}',{temporada},{ep_totales},{ep_vistos},'{visualizacion}','{estado}')")
+    database[1].execute(f"insert into episodios values('{codc}',{temporada},{ep_totales},{ep_vistos},'{estado}')")
     database[0].commit()
+    cambiar_episoidos_si_visto(titulo, temporada, ep_totales,codc,visualizacion)
 
+def cambiar_episoidos_si_visto(titulo,temporada,episodios_totales,codc,visualizacion):
+    if visualizacion.lower() == "visto":
+        database[1].execute(f"update episodios set episodios_vistos={episodios_totales} where codc='{codc}'")
+        database[0].commit()
+    else:
+        opcion = input("Desea añadir los episodios vistos en caso de que haya visto alguno:")
+        opcion = opcion.lower()
+        if opcion == "si":
+            ep_vistos = input("Introduzca los episodios vistos:")
+            anadirepisodios_vistos(titulo, ep_vistos, temporada)
 
 def main():
     op1 = 0
@@ -269,24 +281,10 @@ def main():
                     temporada = input("Digame en numero la temporada:")
                     episodios_totales = input("Dime cuantos episodios tiene el contenido:")
                     visualizacion = input("Dime la visualizacion (si esta visto o no):")
-                    database[1].execute(f"insert into episodios values('{codc}',{temporada},'{episodios_totales}',null,'{visualizacion}')")
+                    database[1].execute(f"insert into episodios values('{codc}',{temporada},'{episodios_totales}',null)")
                     database[0].commit()
-                    if visualizacion.lower() == "visto":
-                        ep_totales = database[1].execute(f"select episodios_totales from episodios where codc='{codc}';").fetchone()[0]
-                        database[1].execute(f"update episodios set episodios_vistos={ep_totales} where codc='{codc}'")
-                        database[0].commit()
-                    else:
-                        titulo = input("Desea añadir los episodios vistos en caso de que haya visto alguno:")
-                        titulo = titulo.lower()
-                        if titulo == "si":
-                            ep_vistos = input("Introduzca los episodios vistos:")
-                            anadirepisodios_vistos(titulo, ep_vistos,temporada)
-                        else:
-                            continue
+                    cambiar_episoidos_si_visto(titulo,temporada,episodios_totales,codc,visualizacion)
                 else:
-                    visualizacion = input("Dime la visualizacion (si esta visto o no):").title()
-                    database[1].execute(f"update contenido set visualizacion={visualizacion} where codc='{codc}'")
-                    database[0].commit()
                     continue
             elif op2 == 2:
                 codpl = generar_codigo_plataforma()
@@ -315,7 +313,8 @@ def main():
                 ep_vistos = input("Introduzca los episodios vistos en numero:")
                 visualizacion = input("Introduzca visualizacion:")
                 estado = input("Introduzca estado(En emision,Finalizado):")
-                insertar_temporada(titulo,temporada,ep_totales,ep_vistos,visualizacion,estado)
+                insertar_temporada(titulo,temporada,ep_totales,ep_vistos,estado,visualizacion)
+
 
 
         elif op1 == 2:

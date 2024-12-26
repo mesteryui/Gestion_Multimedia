@@ -22,7 +22,6 @@ codc varchar(8),
 temporada int, /** Aqui se añddiria el numero de temporada de esta manera se identificara a partir de la serie y la temporada**/
 episodios_totales int NOT NULL,
 episodios_vistos int,
-visualizacion varchar(9),
 estado varchar(16), /**Si es una serie o anime saber si esta en Emision o ha finalizado**/
 primary key(codc,temporada),
 foreign key(codc) references contenido(codc)
