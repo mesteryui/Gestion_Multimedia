@@ -197,7 +197,7 @@ def anadirepisodios_vistos(titulo, ep_vistos, temporada):
     """
     codigo = obtenercodigo_contenido(titulo)
     database[1].execute(
-        f"update episodios set episodios_vistos='{ep_vistos}' where codc='{codigo} and temporada={temporada}'")
+        f"update episodios set episodios_vistos='{ep_vistos}' where codc='{codigo}' and temporada={temporada}")
     database[0].commit()
 
 
@@ -291,6 +291,7 @@ def main():
                     database[0].commit()
                     if visualizacion == "si":
                         cambiar_episoidos_si_visto(temporada, episodios_totales, codc)
+
                 else:
                     continue
             elif op2 == 2:
