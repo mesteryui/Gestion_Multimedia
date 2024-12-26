@@ -12,7 +12,7 @@ def mostrar_contenido(tipo):
     contenidos = database[1].execute(
         f"select titulo from contenido where tipo='{tipo}';").fetchall()  # Guardamos esos contenidos
     num = 0
-    diccionario_titulos = dict() # Definimos un diccionario donde se guardaran los numeros
+    diccionario_titulos = dict()  # Definimos un diccionario donde se guardaran los numeros
     for contenido in contenidos:
         num += 1
         diccionario_titulos[num] = contenido[0]
@@ -138,13 +138,14 @@ def saber_plataforma_veo_contenido(titulo):
         else:
             print(f"La {tipo} {titulo} es vista desde {plataforma[0]} cuya url es {plataforma[1]}\n")
 
-def episodios_saber_temporada(titulo,temporada):
+
+def episodios_saber_temporada(titulo, temporada):
     database[1].execute(
-        f"select episodios_vistos, episodios_totales from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}' and temporad={temporada};")
+        f"select coalesce(episodios_vistos,0), episodios_totales from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}' and temporad={temporada};")
     episodios = database[1].fetchall()
     temporad = pasar_temporada_letra(temporada)
-    vistos = episodios[0] or 0
-    print(f"De {titulo} en su {temporad} temporad: {vistos}/{episodios[0][1]} episodios vistos.\n")
+    print(f"De {titulo} en su {temporad} temporad: {episodios[0][0]}/{episodios[0][1]} episodios vistos.\n")
+
 
 def pasar_temporada_letra(temporada):
     """
@@ -170,7 +171,8 @@ def pasar_temporada_letra(temporada):
         15: "decimoquinta",
         16: "decimosexta"
     }
-    return temporadas.get(temporada,"muchas despues")
+    return temporadas.get(temporada, "muchas despues")
+
 
 def episodios_saber(titulo):
     """
@@ -178,16 +180,15 @@ def episodios_saber(titulo):
     :param titulo: Título del contenido
     """
     database[1].execute(
-        f"select episodios_vistos, episodios_totales,temporada from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';")
+        f"select coalesce(episodios_vistos,0), episodios_totales,temporada from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';")
     episodios = database[1].fetchall()
 
     for episodio in episodios:
-        vistos = episodio[0] or 0
         temporada = pasar_temporada_letra(episodio[2])
-        print(f"De {titulo} en su {temporada} temporada: {vistos}/{episodio[1]} episodios vistos.\n")
+        print(f"De {titulo} en su {temporada} temporada: {episodio[0]}/{episodio[1]} episodios vistos.\n")
 
 
-def anadirepisodios_vistos(titulo, ep_vistos,temporada):
+def anadirepisodios_vistos(titulo, ep_vistos, temporada):
     """
     Permite añadir episodios nuevos despues de haber definido la serie/anime o demás
     :param temporada: la temporada
@@ -195,30 +196,33 @@ def anadirepisodios_vistos(titulo, ep_vistos,temporada):
     :param ep_vistos: los episodios vistos
     """
     codigo = obtenercodigo_contenido(titulo)
-    database[1].execute(f"update episodios set episodios_vistos='{ep_vistos}' where codc='{codigo} and temporada={temporada}'")
+    database[1].execute(
+        f"update episodios set episodios_vistos='{ep_vistos}' where codc='{codigo} and temporada={temporada}'")
     database[0].commit()
 
 
-def modificar_episodios_totales(titulo, ep_totales,temporada):
+def modificar_episodios_totales(titulo, ep_totales, temporada):
     codigo = obtenercodigo_contenido(titulo)
-    database[1].execute(f"update episodios set episodios_totales='{ep_totales}' where codc='{codigo}' and temporada={temporada};")
+    database[1].execute(
+        f"update episodios set episodios_totales='{ep_totales}' where codc='{codigo}' and temporada={temporada};")
     database[0].commit()
 
 
-
-def visto_un_episodio(titulo,temporada):
+def visto_un_episodio(titulo, temporada):
     """
     Permite incrementar en ultimo un episodio visto
     :param temporada: la temporada de la que lo has visto
     :param titulo: el titulo de la serie/anime o lo que sea
     """
     codigo = obtenercodigo_contenido(titulo)
-    database[1].execute(f"select episodios_vistos,episodios_totales from episodios where codc='{codigo}' and temporada={temporada}")
+    database[1].execute(
+        f"select episodios_vistos,episodios_totales from episodios where codc='{codigo}' and temporada={temporada}")
     lista = database[1].fetchone()
     vistos = int(lista[0]) + 1
     totales = int(lista[1])
     if vistos <= totales:  # Si los episodios vistos son menos que el total entonces podemos añadir uno más
-        database[1].execute(f"update episodios set episodios_vistos={str(vistos)} where codc='{codigo}' and temporada={temporada}")
+        database[1].execute(
+            f"update episodios set episodios_vistos={str(vistos)} where codc='{codigo}' and temporada={temporada}")
         database[0].commit()
     else:
         print("Si añadimos un visto más la cantidad de vistos superara al total de episodios")
@@ -242,22 +246,23 @@ def introducir_contenido_genero(titulo, genero):
     database[0].commit()
 
 
-def insertar_temporada(titulo, temporada,ep_totales, ep_vistos, estado,visualizacion):
+def insertar_temporada(titulo, temporada, ep_totales, ep_vistos, estado):
     codc = obtenercodigo_contenido(titulo)
-    database[1].execute(f"insert into episodios values('{codc}',{temporada},{ep_totales},{ep_vistos},'{estado}')")
+    database[1].execute(f"insert into episodios values('{codc}',{temporada},{ep_totales},{ep_vistos},'{estado}');")
     database[0].commit()
-    cambiar_episoidos_si_visto(titulo, temporada, ep_totales,codc,visualizacion)
 
-def cambiar_episoidos_si_visto(titulo,temporada,episodios_totales,codc,visualizacion):
-    if visualizacion.lower() == "visto":
-        database[1].execute(f"update episodios set episodios_vistos={episodios_totales} where codc='{codc}'")
-        database[0].commit()
-    else:
-        opcion = input("Desea añadir los episodios vistos en caso de que haya visto alguno:")
-        opcion = opcion.lower()
-        if opcion == "si":
-            ep_vistos = input("Introduzca los episodios vistos:")
-            anadirepisodios_vistos(titulo, ep_vistos, temporada)
+
+def insertar_temporada_vista(titulo, temporada, ep_totales, estado):
+    codc = obtenercodigo_contenido(titulo)
+    database[1].execute(f"insert into episodios values('{codc}',{temporada},{ep_totales},{ep_totales},'{estado}');")
+    database[0].commit()
+
+
+def cambiar_episoidos_si_visto(temporada, episodios_totales, codc):
+    database[1].execute(
+        f"update episodios set episodios_vistos={episodios_totales} where codc='{codc}' and temporada={temporada}")
+    database[0].commit()
+
 
 def main():
     op1 = 0
@@ -281,9 +286,11 @@ def main():
                     temporada = input("Digame en numero la temporada:")
                     episodios_totales = input("Dime cuantos episodios tiene el contenido:")
                     visualizacion = input("Dime la visualizacion (si esta visto o no):")
-                    database[1].execute(f"insert into episodios values('{codc}',{temporada},'{episodios_totales}',null)")
+                    database[1].execute(
+                        f"insert into episodios values('{codc}',{temporada},'{episodios_totales}',null)")
                     database[0].commit()
-                    cambiar_episoidos_si_visto(titulo,temporada,episodios_totales,codc,visualizacion)
+                    if visualizacion == "si":
+                        cambiar_episoidos_si_visto(temporada, episodios_totales, codc)
                 else:
                     continue
             elif op2 == 2:
@@ -301,6 +308,7 @@ def main():
                 titulo = input("Introduzca el titulo de la serie:")
                 nombre_plat = input("Introduzca el nombre de la plataforma")
                 insertar_contenido_plataforma(titulo, nombre_plat)
+
             elif op2 == 6:
                 titulo = input("Introduzca el titulo:")
                 genero = input("Introduzca el genero:").title()
@@ -310,10 +318,13 @@ def main():
                 titulo = obtener_titulo_de_titulos(tipo)
                 temporada = input("Inserte temporada en numero:")
                 ep_totales = input("Introduzca los episodios totales en numero:")
-                ep_vistos = input("Introduzca los episodios vistos en numero:")
-                visualizacion = input("Introduzca visualizacion:")
+                visualizacion = input("Introduzca si lo vio completamente o no:")
                 estado = input("Introduzca estado(En emision,Finalizado):")
-                insertar_temporada(titulo,temporada,ep_totales,ep_vistos,estado,visualizacion)
+                if visualizacion.lower() == "no":
+                    ep_vistos = input("Introduzca los episodios vistos en numero:")
+                    insertar_temporada(titulo, temporada, ep_totales, ep_vistos, estado)
+                else:
+                    insertar_temporada_vista(titulo, temporada, ep_totales, estado)
 
 
 
@@ -356,17 +367,17 @@ def main():
                     titulo = input("Introduzca el titulo del anime/serie:")
                     ep_vistos = input("Introduzca en numero los episodios vistos:")
                     temporada = input("Digame en numero la temporada:")
-                    anadirepisodios_vistos(titulo, ep_vistos,temporada)
+                    anadirepisodios_vistos(titulo, ep_vistos, temporada)
                 elif op9 == 2:
                     titulo = input("Introduzca el titulo del anime/serie:")
                     ep_totales = input("Introduzca en numero los episodios vistos:")
                     temporada = input("Digame en numero la temporada:")
-                    modificar_episodios_totales(titulo, ep_totales,temporada)
+                    modificar_episodios_totales(titulo, ep_totales, temporada)
                 elif op9 == 3:
                     tipo = input("Digame el tipo de contenido:").title()
                     titulo = obtener_titulo_de_titulos(tipo)
                     temporada = input("Digame en numero la temporada:")
-                    visto_un_episodio(titulo,temporada)
+                    visto_un_episodio(titulo, temporada)
 
 
 if __name__ == '__main__':
