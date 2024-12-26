@@ -27,6 +27,4 @@ def conectar_base():
 def cerrar_conexion(datab):
     conex = datab[0]
     curs = datab[1]
-    curs_client = datab[2]
-    if conex:
-        conex.close(), curs.close(), curs_client.close()
+    conex.close(), curs.close()
