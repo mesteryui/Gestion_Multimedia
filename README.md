@@ -20,6 +20,7 @@ Las credenciales se almacenan en un XML llamado `credentials.xml` con la siguien
     <user>nombre_usuario</user>
     <host>localhost</host>
     <password>contraseña</password>
-    <database>nombre_base_datos</database>
+    <database>contenido_audiovisual</database>
 </credentials>
 ```
+`contenido_audiovisual` es el nombre usado por defecto el script que configura la base de datos crea una base de datos con este nombre
