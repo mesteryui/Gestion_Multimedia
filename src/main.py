@@ -75,10 +75,13 @@ def generar_codigo_plataforma():
     """
     database[1].execute("select codpl from plataformas;")  # Obtener los codigos de las plataformas
     lista = database[1].fetchall()  # Guardarlos en una lista
-    lista_ordenada = sorted(lista, key=lambda x: int(x[0][2:]))  # Ordenar esa lista de menor a mayor numero
-    resultado = lista_ordenada[len(lista_ordenada) - 1][0]  # Acceder al ultimo elemento de la lista
-    resultado = resultado.replace("pl", "")  # Quitarle los dos primeros caracters
-    return int(resultado) + 1  # Devolver el resultado de eso más 1 como entero
+    if not lista:
+        return "pl1"
+    else:
+        lista_ordenada = sorted(lista, key=lambda x: int(x[0][2:]))  # Ordenar esa lista de menor a mayor numero
+        resultado = lista_ordenada[len(lista_ordenada) - 1][0]  # Acceder al ultimo elemento de la lista
+        resultado = int(resultado.replace("pl", ""))+1  # Quitarle los dos primeros caracters
+        return  "pl" + str(resultado) # Devolver el resultado de eso más 1 como entero
 
 
 def generar_codigo_genero(nomg):
@@ -98,14 +101,13 @@ def obtenercodigo_contenido(titulo):
 
 def obtener_episodios_tipo_contenido(tipo):
     database[1].execute(
-        f"select titulo,episodios_vistos,episodios_totales from contenido,episodios where episodios.codc=contenido.codc and tipo='{tipo}'")
+        f"select titulo,coalesce(episodios_vistos,0),episodios_totales from contenido,episodios where episodios.codc=contenido.codc and tipo='{tipo}'")
     datos = database[1].fetchall()
     articul = "De las" if tipo == "Serie" else "De los"
     articul2 = "Del" if tipo == "Anime" else "De la"
     print(f"{articul} {tipo.lower()}s se tiene la siguiente informacion:\n")
     for dato in datos:
-        visto = dato[1] or 0
-        print(f"{articul2} {tipo.lower()} {dato[0]} se han visto {visto} de {dato[2]} episodios\n")
+        print(f"{articul2} {tipo.lower()} {dato[0]} se han visto {dato[1]} de {dato[2]} episodios\n")
 
 
 def insertar_contenido_plataforma(titulo, nombreplataforma):
@@ -179,9 +181,8 @@ def episodios_saber(titulo):
     Muestra la cantidad de episodios vistos de un contenido específico.
     :param titulo: Título del contenido
     """
-    database[1].execute(
-        f"select coalesce(episodios_vistos,0), episodios_totales,temporada from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';")
-    episodios = database[1].fetchall()
+    episodios =  database[1].execute(
+        f"select coalesce(episodios_vistos,0), episodios_totales,temporada from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';").fetchall()
 
     for episodio in episodios:
         temporada = pasar_temporada_letra(episodio[2])
@@ -229,12 +230,11 @@ def visto_un_episodio(titulo, temporada):
 
 
 def cuantos_veo_y_visto_contenido(tipo):
-    letra = tipo[0].lower()
+
+    viendo =  database[1].execute(
+        f"select count(codc) from contenido where tipo='{tipo}' and codc in (select codc from episodios where episodios_vistos<episodios_totales);").fetchone()
     database[1].execute(
-        f"select count(codc) from contenido where codc in (select codc from contenido where codc like '{letra}%') and codc in (select codc from episodios where episodios_vistos<episodios_totales);")
-    viendo = database[1].fetchone()
-    database[1].execute(
-        f"select count(codc) from contenido where codc in (select codc from contenido where codc like '{letra}%') and codc in (select codc from episodios where episodios_vistos=episodios_totales);")
+        f"select count(codc) from contenido where select count(codc) from contenido where tipo='{tipo}' and codc in (select codc from episodios where episodios_vistos=episodios_totales);")
     visto = database[1].fetchone()
     return viendo[0], visto[0]
 
@@ -298,7 +298,7 @@ def main():
                 codpl = generar_codigo_plataforma()
                 nompl = input("Introduzca el nombre de la plataforma:").title()
                 url = input("Introduzca el enlace de acceso a la plataforma:")
-                database[1].execute(f"insert into plataformas values('pl{codpl}','{nompl}','{url}')")
+                database[1].execute(f"insert into plataformas values('{codpl}','{nompl}','{url}')")
                 database[0].commit()
             elif op2 == 3:
                 nombre_genero = input("Introduzca el nombre del genero:").title()
