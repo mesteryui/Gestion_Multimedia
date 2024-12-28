@@ -79,7 +79,7 @@ def generar_codigo_plataforma():
         lista_ordenada = sorted(lista, key=lambda x: int(x[0][2:]))  # Ordenar esa lista de menor a mayor numero
         resultado = lista_ordenada[len(lista_ordenada) - 1][0]  # Acceder al ultimo elemento de la lista
         resultado = int(resultado.replace("pl", ""))+1  # Quitarle los dos primeros caracters
-        return  "pl" + str(resultado) # Devolver el resultado de eso más 1 como entero
+        return "pl" + str(resultado) # Devolver el resultado de eso más 1 añadiendole pl para hacer el codigo final
 
 
 def generar_codigo_genero(nomg):
