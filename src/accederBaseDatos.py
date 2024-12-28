@@ -1,8 +1,10 @@
+from xml.etree.ElementTree import ElementTree
+
 import psycopg
 import xml.etree.ElementTree as ET
 
 
-def obtener_raiz():
+def obtener_raiz() -> ElementTree:
     arbol = ET.parse("credentials.xml")
     return arbol.getroot()
 
@@ -11,8 +13,7 @@ def conectar_base():
     """
     Conectarse a la base de datos
     Returns:
-        Connection: La conexion a la base de datos
-
+        La conexion a la base de datos, el cursor para poder hacer consultas y por si acaso el cursor de cliente
     """
     raiz = obtener_raiz()
     try:
