@@ -8,6 +8,12 @@ def obtener_raiz():
 
 
 def conectar_base():
+    """
+    Conectarse a la base de datos
+    Returns:
+        Connection: La conexion a la base de datos
+
+    """
     raiz = obtener_raiz()
     try:
         conexion = psycopg.connect(
