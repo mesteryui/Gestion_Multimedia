@@ -27,14 +27,14 @@ def obtener_titulo_de_titulos(tipo):
     :param tipo: el tipo de contenido lo necesitamos para la funcion mostrar_contenido
     :return: el titulo si tod salio bien si no vuelve a iniciar la funcion main
     """
-    titulos = mostrar_contenido(tipo)
-    opcion = int(input("Introduzca una opcion en numero:"))
-    titulo = titulos.get(opcion, "nose")
-    if titulo == "nose":
-        print("Lo siento esa opcion no es valida")
-        main()
+    titulos = mostrar_contenido(tipo) # Mostrar los contenidos de un tipo y obtener diccionario de titulos numeros
+    opcion = int(input("Introduzca una opcion en numero:")) # Pedir una opcion
+    titulo = titulos.get(opcion, "nose") # Obtener el titulo correspondiente a esa opcion o devolver nose si no existe
+    if titulo == "nose": # Si es nose
+        print("Lo siento esa opcion no es valida") # Indicamos que la opcion no es valida
+        main() # Volvemos a la funcion main
     else:
-        return titulo
+        return titulo # Devolvemos el titulo
 
 
 def anadir_descripcion(titulo, descripcion):
@@ -43,7 +43,7 @@ def anadir_descripcion(titulo, descripcion):
     :param titulo: el titulo del contenido
     :param descripcion: la descipcion a añadir
     """
-    database[2].execute(f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';")
+    database[2].execute(f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';") # Añadir descripcion a un contenido
     database[0].commit()
 
 
@@ -73,8 +73,8 @@ def generar_codigo_plataforma():
     """
     database[1].execute("select codpl from plataformas;")  # Obtener los codigos de las plataformas
     lista = database[1].fetchall()  # Guardarlos en una lista
-    if not lista:
-        return "pl1"
+    if not lista: # Si la lista esta vacia
+        return "pl1" # Devolvemos el codigo con el primer numero
     else:
         lista_ordenada = sorted(lista, key=lambda x: int(x[0][2:]))  # Ordenar esa lista de menor a mayor numero
         resultado = lista_ordenada[len(lista_ordenada) - 1][0]  # Acceder al ultimo elemento de la lista
@@ -83,7 +83,7 @@ def generar_codigo_plataforma():
 
 
 def generar_codigo_genero(nomg):
-    return nomg[0].capitalize()
+    return nomg[0].capitalize() # Devolvemos la primera letra del genero en mayusculas
 
 
 def obtenercodigo_contenido(titulo):
@@ -93,15 +93,15 @@ def obtenercodigo_contenido(titulo):
     :return: el codigo de ese contenido
     """
     database[1].execute(f"select codc from contenido where titulo='{titulo}'")
-    episodio = database[1].fetchone()
-    return episodio[0]
+    codc = database[1].fetchone()
+    return codc[0]
 
 
 def obtener_episodios_tipo_contenido(tipo):
     database[1].execute(
         f"select titulo,coalesce(episodios_vistos,0),episodios_totales from contenido,episodios where episodios.codc=contenido.codc and tipo='{tipo}'")
     datos = database[1].fetchall()
-    articul = "De las" if tipo == "Serie" else "De los"
+    articul = "De las" if tipo == "Serie" or tipo == "Pelicula" else "De los"
     articul2 = "Del" if tipo == "Anime" else "De la"
     print(f"{articul} {tipo.lower()}s se tiene la siguiente informacion:\n")
     for dato in datos:
