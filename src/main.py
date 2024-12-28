@@ -49,23 +49,21 @@ def anadir_descripcion(titulo, descripcion):
 
 def generar_codigo_contenido(tipo):
     """
-    Pasando el tipo de contenido a añadir creamos el numero que se le añade al codigo
+    Pasando el tipo de contenido a añadir creamos el numero que se le añade al codigo y luego lo unimos a la letra
     :param tipo: el tipo de contenido a añadir
-    :return: (numero ultimo codc)+1 o 1 si no existen codigos con la letra para ese tipo definido
+    :return: letra + (numero_contenido + 1)
     """
     database[1].execute(
         f"select codc from contenido where tipo='{tipo}'")  # Ejecutamos la consulta para obtener los codigos
     letra = tipo[0].lower()  # Obtenemos la letra del tipo sacando el primer elemento como minuscula
     lista = database[1].fetchall()  # Obtenemos todos los codigos
     if not lista:  # Si la lista esta vacia
-        return 1  # Devolvemos el primer numero por el que empiezan los codigos
+        return letra + "1" # Devolvemos el primer numero por el que empiezan los codigos
     else:  # En caso contrario es decir que la lista contenga algo
-        lista_ordenada = sorted(lista, key=lambda x: int(
-            x[0][1:]))  # Ordenamos los valores de la lista por numeros de menor a mayor
-        resultado = lista_ordenada[len(lista_ordenada) - 1][
-            0]  # Obtenemos el ultimo indice de la lista pero como es bidimensional el dato estara siempre en el primer indice
+        lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:]))  # Ordenamos los valores de la lista por numeros de menor a mayor
+        resultado = lista_ordenada[len(lista_ordenada) - 1][0]  # Obtenemos el ultimo indice de la lista pero como es bidimensional el dato estara siempre en el primer indice
         resultado = resultado.replace(letra, "")  # Quitamos la letra
-        return int(resultado) + 1  # Devolvemos el resultado mas uno como numero
+        return letra + str(int(resultado) + 1)  # Devolvemos el resultado mas uno como numero
 
 
 def generar_codigo_plataforma():
@@ -129,12 +127,9 @@ def saber_plataforma_veo_contenido(titulo):
     Te permite ver la plataforma en la que ves un contenido
     :param titulo: el titulo del contenido
     """
-    database[1].execute(
-        f"select nomg,url,tipo from contenido join disponible on contenido.codc=disponible.codc join plataformas on plataformas.codpl=disponible.codpl where titulo='{titulo}';")
-    plataformas = database[1].fetchall()
+    plataformas = database[1].execute(f"select nomg,url,tipo from contenido join disponible on contenido.codc=disponible.codc join plataformas on plataformas.codpl=disponible.codpl where titulo='{titulo}';").fetchall()
     for plataforma in plataformas:
-        tipo = plataforma[2]
-        tipo = tipo.lower()
+        tipo = plataforma[2].lower()
         if tipo == "anime":
             print(f"El {tipo} {titulo} es visto desde {plataforma[0]} cuya url es {plataforma[1]}\n")
         else:
@@ -277,9 +272,7 @@ def main():
                 titulo = input("Introduzca el titulo del contenido:")
                 descripcion = input("Introduzca descripcion del contenido:")
                 tipo = input("Introduzca el tipo de contenido").title()
-                cod = tipo[0].lower()
-                num = generar_codigo_contenido(tipo)
-                codc = cod + str(num)
+                codc = generar_codigo_contenido(tipo)
                 database[1].execute(f"insert into contenido values('{codc}','{titulo}','{descripcion}',null,'{tipo}')")
                 database[0].commit()
                 if tipo == "Serie" or tipo == "Anime":
