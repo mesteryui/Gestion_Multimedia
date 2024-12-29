@@ -306,15 +306,15 @@ def cambiar_episoidos_si_visto(temporada, episodios_totales, codc):
 
 
 def main():
-    op1 = 0
-    while op1 != 5:
+    opcion_menu_1 = 0
+    while opcion_menu_1 != 5:
         print("1.Introducir Datos\n2.Ver datos\n3.Eliminar Dato\n4.Actualizar dato\n5.Salir")
-        op1 = int(input("Seleccione una opción: "))
-        if op1 == 1:  # Añadir contenido
+        opcion_menu_1 = int(input("Seleccione una opción: "))
+        if opcion_menu_1 == 1:  # Añadir contenido
             print(
                 "1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero\n7.Añadir nueva temporada a una serie")
-            op2 = int(input())
-            if op2 == 1:  # Añadir un nuevo contenido
+            opcion_ver_datos = int(input())
+            if opcion_ver_datos == 1:  # Añadir un nuevo contenido
                 titulo = input("Introduzca el titulo del contenido:")
                 descripcion = input("Introduzca descripcion del contenido:")
                 tipo = input("Introduzca el tipo de contenido").title()
@@ -339,29 +339,29 @@ def main():
                             continue
                 else:
                     continue
-            elif op2 == 2:  # Añadir nueva plataforma
+            elif opcion_ver_datos == 2:  # Añadir nueva plataforma
                 codpl = generar_codigo_plataforma()
                 nompl = input("Introduzca el nombre de la plataforma:").title()
                 url = input("Introduzca el enlace de acceso a la plataforma:")
                 database[1].execute(f"insert into plataformas values('{codpl}','{nompl}','{url}')")
                 database[0].commit()
-            elif op2 == 3:  # Añadir nuevo genero
+            elif opcion_ver_datos == 3:  # Añadir nuevo genero
                 nombre_genero = input("Introduzca el nombre del genero:").title()
                 codg = generar_codigo_genero(nombre_genero)
                 database[2].execute(f"insert into generos values('{codg}','{nombre_genero}')")
                 database[0].commit()
-            elif op2 == 4:  # Añadir contenido plataforma
+            elif opcion_ver_datos == 4:  # Añadir contenido plataforma
                 tipo = input("Digame el tipo de contenido").title()
                 titulo = obtener_titulo_de_titulos(tipo)
                 cod_plat = obtener_plataforma_plataformas()
                 insertar_contenido_plataforma(titulo, cod_plat)
 
-            elif op2 == 6:
+            elif opcion_ver_datos == 6:
                 tipo = input("Digame el tipo de contenido").title()
                 titulo = obtener_titulo_de_titulos(tipo)
                 genero = input("Introduzca el genero:").title()
                 introducir_contenido_genero(titulo, genero)
-            elif op2 == 7:
+            elif opcion_ver_datos == 7:
                 tipo = input("Introduzca el tipo de contenido:").title()
                 titulo = obtener_titulo_de_titulos(tipo)
                 temporada = input("Inserte temporada en numero:")
@@ -376,52 +376,52 @@ def main():
 
 
 
-        elif op1 == 2:  # Ver datos
+        elif opcion_menu_1 == 2:  # Ver datos
             print(
                 "1.Cuantos Episodios se han visto de un contenido especifico\n2.Saber cuantos episodios se han visto de animes/series\n3.En que plataforma veo contenido\n4.Cuanto contendio estoy viendo\n5.Cuanto he visto")
-            op2 = int(input())
-            if op2 == 1:
+            opcion_ver_datos = int(input())
+            if opcion_ver_datos == 1:
                 tipo = input("Dime el tipo de contenido:").title()
                 titulo = obtener_titulo_de_titulos(tipo)
                 episodios_saber(titulo)
-            elif op2 == 2:
+            elif opcion_ver_datos == 2:
                 tipo = input("Introduce el tipo de contenido")
                 obtener_episodios_tipo_contenido(tipo)
-            elif op2 == 3:
+            elif opcion_ver_datos == 3:
                 titulo = input("Dime el titulo del contenido:")
                 saber_plataforma_veo_contenido(titulo)
-            elif op2 == 4:
+            elif opcion_ver_datos == 4:
                 tipo = input("Indicame el tipo de contenido:")
                 viendo = cuantos_veo_y_visto_contenido(tipo)[0]
                 print(f"Estoy viendo {tipo} un total de {viendo} {tipo.lower()}s")
 
 
-        elif op1 == 4:  # Actualizar datos
+        elif opcion_menu_1 == 4:  # Actualizar datos
             print("1.Contenido\n2.Episodios\n3.Plataformas")
-            op8 = int(input())
-            if op8 == 1:  # Actualizar datos del contenido
+            opcion_actualizar_datos = int(input())
+            if opcion_actualizar_datos == 1:  # Actualizar datos del contenido
                 print("1.Añadir descripcion")
-                op9 = int(input())
-                if op9 == 1:
+                op_actualizar_ep = int(input())
+                if op_actualizar_ep == 1:
                     tipo = input("Digame el tipo de contenido del que desea añadir una descripcion:")
                     titulo = obtener_titulo_de_titulos(tipo)
                     descripcion = input("Introduce la descripcion a añadir")
                     anadir_descripcion(titulo, descripcion)
 
-            elif op8 == 2:  # Actualizar datos de los episodios
+            elif opcion_actualizar_datos == 2:  # Actualizar datos de los episodios
                 print("1.Episodios Vistos\n2.Episodios totales\n3.Visto un episodio")
-                op9 = int(input())
-                if op9 == 1:
+                op_actualizar_ep = int(input())
+                if op_actualizar_ep == 1:
                     titulo = input("Introduzca el titulo del anime/serie:")
                     ep_vistos = input("Introduzca en numero los episodios vistos:")
                     temporada = input("Digame en numero la temporada:")
                     anadirepisodios_vistos(titulo, ep_vistos, temporada)  # Añadimos nueva cantidad de episodios vistos
-                elif op9 == 2:
+                elif op_actualizar_ep == 2:
                     titulo = input("Introduzca el titulo del anime/serie:")
                     ep_totales = input("Introduzca en numero los episodios vistos:")
                     temporada = input("Digame en numero la temporada:")
                     modificar_episodios_totales(titulo, ep_totales, temporada)  # Modificamos los episodios totales
-                elif op9 == 3:
+                elif op_actualizar_ep == 3:
                     tipo = input("Digame el tipo de contenido:").title()
                     titulo = obtener_titulo_de_titulos(tipo)
                     temporada = input("Digame en numero la temporada:")
