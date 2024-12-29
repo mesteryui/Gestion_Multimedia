@@ -3,7 +3,7 @@ from accederBaseDatos import *
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 
 
-def mostrar_contenido(tipo) -> dict:
+def mostrar_contenido(tipo:str) -> dict:
     """
     Pasandole el tipo de contenido nos muestra tod-o lo que hay de ese contenido
     :param tipo: el tipo de contenido
@@ -21,7 +21,7 @@ def mostrar_contenido(tipo) -> dict:
     return diccionario_titulos
 
 
-def obtener_titulo_de_titulos(tipo) -> str:
+def obtener_titulo_de_titulos(tipo:str) -> str:
     """
     Obtiene el titulo que le indiquemos aprovechando la funcion mostrar_contenido
     Args:
@@ -63,10 +63,8 @@ def generar_codigo_contenido(tipo) -> str:
     if not lista:  # Si la lista esta vacia
         return letra + "1"  # Devolvemos el primer numero por el que empiezan los codigos
     else:  # En caso contrario es decir que la lista contenga algo
-        lista_ordenada = sorted(lista, key=lambda x: int(
-            x[0][1:]))  # Ordenamos los valores de la lista por numeros de menor a mayor
-        resultado = lista_ordenada[len(lista_ordenada) - 1][
-            0]  # Obtenemos el ultimo indice de la lista pero como es bidimensional el dato estara siempre en el primer indice
+        lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:]))  # Ordenamos los valores de la lista por numeros de menor a mayor
+        resultado = lista_ordenada[len(lista_ordenada) - 1][0]  # Obtenemos el ultimo indice de la lista pero como es bidimensional el dato estara siempre en el primer indice
         resultado = resultado.replace(letra, "")  # Quitamos la letra
         return letra + str(int(resultado) + 1)  # Devolvemos el resultado mas uno como numero
 
@@ -74,7 +72,8 @@ def generar_codigo_contenido(tipo) -> str:
 def generar_codigo_plataforma() -> str:
     """
     Generar el codigo numerico para plataformas
-    :return: el codigo numerico
+    Returns:
+        El codigo de la plataforma
     """
     database[1].execute("select codpl from plataformas;")  # Obtener los codigos de las plataformas
     lista = database[1].fetchall()  # Guardarlos en una lista
@@ -148,7 +147,7 @@ def episodios_saber_temporada(titulo, temporada):
     print(f"De {titulo} en su {temporad} temporad: {episodios[0][0]}/{episodios[0][1]} episodios vistos.\n")
 
 
-def pasar_temporada_letra(temporada) -> str:
+def pasar_temporada_letra(temporada:int) -> str:
     """
     Pasa las temporadas de numero a letra
     Args:
