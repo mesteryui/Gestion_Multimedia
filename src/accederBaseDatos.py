@@ -1,10 +1,8 @@
-from xml.etree.ElementTree import ElementTree
-
 import psycopg
 import xml.etree.ElementTree as ET
 
 
-def obtener_raiz() -> ElementTree:
+def obtener_raiz():
     arbol = ET.parse("credentials.xml")
     return arbol.getroot()
 
