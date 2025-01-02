@@ -4,8 +4,11 @@ from pathlib import Path
 
 
 def crear_base_datos():
-    base = Path(os.getcwd()).parent.joinpath("main.db")
-    tablas = str(Path(os.getcwd()).parent.joinpath("Crear_tablas.sql"))
+    """
+    Crea la base de datos en caso de no existir
+    """
+    base = Path(Path.cwd().parent.joinpath("main.db"))
+    tablas = str(Path(Path.cwd().parent.joinpath("Crear_tablas.sql")))
     if not os.path.exists(base):
         base_datos = conectar_base()
         with open(base,"w") as archivo:
@@ -22,9 +25,9 @@ def conectar_base():
     """
     crear_base_datos()
     try:
-        conexion = sqlite3.connect(Path(os.getcwd()).parent.joinpath("main.db"))
-        cursor = conexion.cursor()
-        return conexion,cursor
+        connection = sqlite3.connect(Path(os.getcwd()).parent.joinpath("main.db"))
+        cursor = connection.cursor()
+        return connection,cursor
     except sqlite3.OperationalError:
         return "La base de datos no fue abierta correctamente"
 
