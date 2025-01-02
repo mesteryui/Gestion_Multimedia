@@ -5,11 +5,13 @@ from pathlib import Path
 
 def crear_base_datos():
     base = Path(os.getcwd()).parent.joinpath("main.db")
+    tablas = str(Path(os.getcwd()).parent.joinpath("Crear_tablas.sql"))
     if not os.path.exists(base):
         base_datos = conectar_base()
         with open(base,"w") as archivo:
             archivo.write("")
             base_datos[1].execute("PRAGMA foreign_keys = ON;")
+            base_datos[1].execute(f".read {tablas}")
             base_datos[0].commit()
 
 def conectar_base():
