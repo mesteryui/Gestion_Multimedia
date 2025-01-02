@@ -21,7 +21,7 @@ def mostrar_contenido(tipo:str) -> dict:
     return diccionario_titulos
 
 
-def obtener_titulo_de_titulos(tipo:str) -> str:
+def obtener_titulo_de_titulos(tipo:str):
     """
     Obtiene el titulo que le indiquemos aprovechando la funcion mostrar_contenido
     Args:
