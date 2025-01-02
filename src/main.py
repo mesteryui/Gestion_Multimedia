@@ -1,4 +1,4 @@
-from accederBaseDatos import *
+from accederBaseDatos import conectar_base,cerrar_conexion
 
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 
@@ -181,9 +181,8 @@ def episodios_saber(titulo):
     Muestra la cantidad de episodios vistos de un contenido específico.
     :param titulo: Título del contenido
     """
-    episodios = database[1].execute(
-        f"select coalesce(episodios_vistos,0), episodios_totales,temporada from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';").fetchall()
-
+    database[1].execute(f"select coalesce(episodios_vistos,0), episodios_totales,temporada from contenido JOIN episodios ON contenido.codc = episodios.codc where titulo='{titulo}';")
+    episodios = database[1].fetchall()
     for episodio in episodios:
         temporada = pasar_temporada_letra(episodio[2])
         print(f"De {titulo} en su {temporada} temporada: {episodio[0]}/{episodio[1]} episodios vistos.\n")
@@ -230,8 +229,9 @@ def visto_un_episodio(titulo, temporada):
 
 
 def cuantos_veo_y_visto_contenido(tipo):
-    viendo = database[1].execute(
-        f"select count(codc) from contenido where tipo='{tipo}' and codc in (select codc from episodios where episodios_vistos<episodios_totales);").fetchone()
+    database[1].execute(
+        f"select count(codc) from contenido where tipo='{tipo}' and codc in (select codc from episodios where episodios_vistos<episodios_totales);")
+    viendo = database[1].fetchone()
     database[1].execute(
         f"select count(codc) from contenido where select count(codc) from contenido where tipo='{tipo}' and codc in (select codc from episodios where episodios_vistos=episodios_totales);")
     visto = database[1].fetchone()
