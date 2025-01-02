@@ -6,7 +6,9 @@
 >Informo que las dos cuentas corresponden a mi
 
 Aviso que las pruebas la estoy haciendo con la base de datos que ya tengo y que además hay algunas cosas que no he corregido
-debido a eso el programa puede no estar adaptado al script que estoy creando
+debido a eso el programa puede no estar adaptado al script que estoy creando.
+
+Dado a que lo que hace el programa es muy sencillo como para necesitar algo tan potente como Postgres estoy probando a mudarlo a SQLite en esta rama de desarrollo
 
 ## Tecnologias utilizadas:
 - [PostgreSQL](https://www.postgresql.org/): Sistema de base de datos utilizado
