@@ -1,60 +1,54 @@
-/** Eliminar tablas si existen previamente**/
-drop table if exists contenido cascade;
-drop table if exists episodios cascade;
-drop table if exists generos cascade;
-drop table if exists plataformas cascade;
-drop table if exists esde cascade;
-drop table if exists disponible cascade;
+/** Eliminar tablas si existen previamente **/
+DROP TABLE IF EXISTS contenido;
+DROP TABLE IF EXISTS episodios;
+DROP TABLE IF EXISTS generos;
+DROP TABLE IF EXISTS plataformas;
+DROP TABLE IF EXISTS esde;
+DROP TABLE IF EXISTS disponible;
 
-
-/** Estableciendo tablas**/
-create table contenido(
-codc varchar(8),
-titulo varchar(255) not null,
-descripcion TEXT,
-visualizacion varchar(9), /** Saber si estoy viendola o ya la he visto o esta por ver para peliculas**/
-tipo varchar(50) not null,
-primary key (codc)
+/** Estableciendo tablas **/
+CREATE TABLE contenido (
+    codc TEXT PRIMARY KEY, -- SQLite usa TEXT en lugar de varchar
+    titulo TEXT NOT NULL,
+    descripcion TEXT,
+    visualizacion TEXT, -- Saber si estoy viendola o ya la he visto o está por ver para películas
+    tipo TEXT NOT NULL
 );
 
-create table episodios(
-codc varchar(8),
-temporada int, /** Aqui se añddiria el numero de temporada de esta manera se identificara a partir de la serie y la temporada**/
-episodios_totales int NOT NULL,
-episodios_vistos int,
-estado varchar(16), /**Si es una serie o anime saber si esta en Emision o ha finalizado**/
-primary key(codc,temporada),
-foreign key(codc) references contenido(codc)
+CREATE TABLE episodios (
+    codc TEXT,
+    temporada INTEGER, -- INTEGER para números
+    episodios_totales INTEGER NOT NULL,
+    episodios_vistos INTEGER,
+    estado TEXT, -- Saber si está en Emisión o ha finalizado
+    PRIMARY KEY (codc, temporada),
+    FOREIGN KEY (codc) REFERENCES contenido (codc)
 );
 
-create table generos(
-codg char(1),
-nomg varchar(100) not null,
-primary key (codg)
+CREATE TABLE generos (
+    codg TEXT PRIMARY KEY, -- TEXT en lugar de char(1)
+    nomg TEXT NOT NULL
 );
 
-create table plataformas(
-codpl varchar(10),
-nomg varchar(100) not null,
-url varchar(255),
-primary key (codpl)
+CREATE TABLE plataformas (
+    codpl TEXT PRIMARY KEY, -- TEXT en lugar de varchar(10)
+    nomg TEXT NOT NULL,
+    url TEXT
 );
 
-create table esde(
-codc varchar(8),
-codg char(1),
-primary key(codc,codg),
-foreign key (codc) references contenido,
-foreign key (codg) references generos
+CREATE TABLE esde (
+    codc TEXT,
+    codg TEXT,
+    PRIMARY KEY (codc, codg),
+    FOREIGN KEY (codc) REFERENCES contenido (codc),
+    FOREIGN KEY (codg) REFERENCES generos (codg)
 );
 
-create table disponible(
-codc varchar(8),
-codpl varchar(10),
-url_disponible varchar(400), /**La url dentro de la plataforma donde se encuentra la serie por ejemplo
-si esta en Netfilix esto incluiria la url de Netflix y el resto hasta la serie no se como hacerlo de forma que coja la url de plataformas y le añada lo que necesito**/
-primary key (codc,codpl),
-foreign key (codc) references contenido,
-foreign key (codpl) references plataformas
+CREATE TABLE disponible (
+    codc TEXT,
+    codpl TEXT,
+    url_disponible TEXT, -- La URL dentro de la plataforma donde se encuentra la serie
+    PRIMARY KEY (codc, codpl),
+    FOREIGN KEY (codc) REFERENCES contenido (codc),
+    FOREIGN KEY (codpl) REFERENCES plataformas (codpl)
 );
-
