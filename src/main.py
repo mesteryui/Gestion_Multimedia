@@ -56,10 +56,10 @@ def generar_codigo_contenido(tipo) -> str:
     :param tipo: el tipo de contenido a añadir
     :return: letra + (numero_contenido + 1)
     """
-    database[1].execute(
-        f"select codc from contenido where tipo='{tipo}'")  # Ejecutamos la consulta para obtener los codigos
+      # Ejecutamos la consulta para obtener los codigos
     letra = tipo[0].lower()  # Obtenemos la letra del tipo sacando el primer elemento como minuscula
-    lista = database[1].fetchall()  # Obtenemos todos los codigos
+    database[1].execute(f"select codc from contenido where tipo='{tipo}'")  # Obtenemos todos los codigos
+    lista = database[1].fetchall()
     if not lista:  # Si la lista esta vacia
         return letra + "1"  # Devolvemos el primer numero por el que empiezan los codigos
     else:  # En caso contrario es decir que la lista contenga algo
