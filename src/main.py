@@ -339,6 +339,8 @@ def main():
                         else:
                             continue
                 else:
+                    visualizacion = input("Digame si esta Viendo o ha visto(tipo: Viendo,Visto):")
+                    database[1].execute(f"update contenido set visualizacion='{visualizacion}' where titulo='{titulo}'")
                     continue
             elif opcion_anadir_datos == 2:  # Añadir nueva plataforma
                 codpl = generar_codigo_plataforma()
@@ -349,7 +351,7 @@ def main():
             elif opcion_anadir_datos == 3:  # Añadir nuevo genero
                 nombre_genero = input("Introduzca el nombre del genero:").title()
                 codg = generar_codigo_genero(nombre_genero)
-                database[2].execute(f"insert into generos values('{codg}','{nombre_genero}')")
+                database[1].execute(f"insert into generos values('{codg}','{nombre_genero}')")
                 database[0].commit()
             elif opcion_anadir_datos == 4:  # Añadir contenido plataforma
                 tipo = input("Digame el tipo de contenido").title()
