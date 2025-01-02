@@ -9,8 +9,8 @@ def mostrar_contenido(tipo:str) -> dict:
     :param tipo: el tipo de contenido
     :return: los contenidos en un diccionario
     """
-    contenidos = database[1].execute(
-        f"select titulo from contenido where tipo='{tipo}';").fetchall()  # Guardamos esos contenidos
+    database[1].execute(f"select titulo from contenido where tipo='{tipo}'")
+    contenidos = database[1].fetchall()  # Guardamos esos contenidos
     num = 0
     diccionario_titulos = dict()  # Definimos un diccionario donde se guardaran los numeros
     for contenido in contenidos:
@@ -45,7 +45,7 @@ def anadir_descripcion(titulo, descripcion):
     :param titulo: el titulo del contenido
     :param descripcion: la descipcion a añadir
     """
-    database[2].execute(
+    database[1].execute(
         f"update contenido set descripcion='{descripcion}' where titulo='{titulo}';")  # Añadir descripcion a un contenido
     database[0].commit()
 
@@ -120,7 +120,7 @@ def insertar_contenido_plataforma(titulo, codpl):
     :return:
     """
     codc = obtenercodigo_contenido(titulo)
-    database[1].execute(f"insert into disponible values('{codc}','{codpl}')")
+    database[1].execute(f"insert into disponible values('{codc}','{codpl}',null)")
     database[0].commit()
 
 
@@ -313,8 +313,8 @@ def main():
         if opcion_menu_1 == 1:  # Añadir contenido
             print(
                 "1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero\n7.Añadir nueva temporada a una serie")
-            opcion_ver_datos = int(input())
-            if opcion_ver_datos == 1:  # Añadir un nuevo contenido
+            opcion_anadir_datos = int(input())
+            if opcion_anadir_datos == 1:  # Añadir un nuevo contenido
                 titulo = input("Introduzca el titulo del contenido:")
                 descripcion = input("Introduzca descripcion del contenido:")
                 tipo = input("Introduzca el tipo de contenido").title()
@@ -325,8 +325,9 @@ def main():
                     temporada = input("Digame en numero la temporada:")
                     episodios_totales = input("Dime cuantos episodios tiene el contenido:")
                     visualizacion = input("Dime la visualizacion (si esta visto o no):")
+                    estado = input("Digame el estado en el que esta la temporada(si lo sabe):")
                     database[1].execute(
-                        f"insert into episodios values('{codc}',{temporada},'{episodios_totales}',null)")
+                        f"insert into episodios values('{codc}',{temporada},{episodios_totales},null,'{estado}')")
                     database[0].commit()
                     if visualizacion == "si":
                         cambiar_episoidos_si_visto(temporada, episodios_totales, codc)
@@ -339,29 +340,29 @@ def main():
                             continue
                 else:
                     continue
-            elif opcion_ver_datos == 2:  # Añadir nueva plataforma
+            elif opcion_anadir_datos == 2:  # Añadir nueva plataforma
                 codpl = generar_codigo_plataforma()
                 nompl = input("Introduzca el nombre de la plataforma:").title()
                 url = input("Introduzca el enlace de acceso a la plataforma:")
                 database[1].execute(f"insert into plataformas values('{codpl}','{nompl}','{url}')")
                 database[0].commit()
-            elif opcion_ver_datos == 3:  # Añadir nuevo genero
+            elif opcion_anadir_datos == 3:  # Añadir nuevo genero
                 nombre_genero = input("Introduzca el nombre del genero:").title()
                 codg = generar_codigo_genero(nombre_genero)
                 database[2].execute(f"insert into generos values('{codg}','{nombre_genero}')")
                 database[0].commit()
-            elif opcion_ver_datos == 4:  # Añadir contenido plataforma
+            elif opcion_anadir_datos == 4:  # Añadir contenido plataforma
                 tipo = input("Digame el tipo de contenido").title()
                 titulo = obtener_titulo_de_titulos(tipo)
                 cod_plat = obtener_plataforma_plataformas()
                 insertar_contenido_plataforma(titulo, cod_plat)
 
-            elif opcion_ver_datos == 6:
+            elif opcion_anadir_datos == 6:
                 tipo = input("Digame el tipo de contenido").title()
                 titulo = obtener_titulo_de_titulos(tipo)
                 genero = input("Introduzca el genero:").title()
                 introducir_contenido_genero(titulo, genero)
-            elif opcion_ver_datos == 7:
+            elif opcion_anadir_datos == 7:
                 tipo = input("Introduzca el tipo de contenido:").title()
                 titulo = obtener_titulo_de_titulos(tipo)
                 temporada = input("Inserte temporada en numero:")
