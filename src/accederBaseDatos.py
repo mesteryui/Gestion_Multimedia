@@ -1,11 +1,16 @@
-import psycopg
-import xml.etree.ElementTree as ET
+import os.path
+import sqlite3
+from pathlib import Path
 
 
-def obtener_raiz():
-    arbol = ET.parse("credentials.xml")
-    return arbol.getroot()
-
+def crear_base_datos():
+    base = Path(os.getcwd()).parent.joinpath("main.db")
+    if not os.path.exists(base):
+        base_datos = conectar_base()
+        with open(base,"w") as archivo:
+            archivo.write("")
+            base_datos[1].execute("PRAGMA foreign_keys = ON;")
+            base_datos[0].commit()
 
 def conectar_base():
     """
@@ -13,20 +18,13 @@ def conectar_base():
     Returns:
         La conexion a la base de datos, el cursor para poder hacer consultas y por si acaso el cursor de cliente
     """
-    raiz = obtener_raiz()
+    crear_base_datos()
     try:
-        conexion = psycopg.connect(
-            host=raiz.find("host").text,
-            dbname=raiz.find("database").text,
-            user=raiz.find("user").text,
-            password=raiz.find("password").text
-        )
-        client_cursor = psycopg.ClientCursor(conexion)
+        conexion = sqlite3.connect(Path(os.getcwd()).parent.joinpath("main.db"))
         cursor = conexion.cursor()
-        return conexion, cursor, client_cursor
-    except psycopg.Error as e:
-        print("Error al insertar datos:", e)
-        return e
+        return conexion,cursor
+    except sqlite3.OperationalError:
+        return "La base de datos no fue abierta correctamente"
 
 
 def cerrar_conexion(datab):
