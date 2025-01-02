@@ -291,6 +291,10 @@ def insertar_temporada_vista(titulo, temporada, ep_totales, estado):
     database[1].execute(f"insert into episodios values('{codc}',{temporada},{ep_totales},{ep_totales},'{estado}');")
     database[0].commit()
 
+def obtener_temporadas(titulo:str)-> list:
+    codc = obtenercodigo_contenido(titulo)
+    database[1].execute(f"select temporada from episodios where codc='{codc}'")
+    return database[1].fetchall()
 
 def cambiar_episoidos_si_visto(temporada, episodios_totales, codc):
     """
@@ -358,7 +362,6 @@ def main():
                 titulo = obtener_titulo_de_titulos(tipo)
                 cod_plat = obtener_plataforma_plataformas()
                 insertar_contenido_plataforma(titulo, cod_plat)
-
             elif opcion_anadir_datos == 6:
                 tipo = input("Digame el tipo de contenido").title()
                 titulo = obtener_titulo_de_titulos(tipo)
