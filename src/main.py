@@ -100,7 +100,21 @@ def obtenercodigo_contenido(titulo) -> str:
     codc = database[1].fetchone()
     return codc[0]
 
-
+def mostrar_generos_contendio(titulo):
+    codc = obtenercodigo_contenido(titulo)
+    database[1].execute(f"select tipo from contenido where codc='{codc}'")
+    tipo = database[1].fetchone()[0]
+    database[1].execute(f"select nomg from generos where codg in (select codg from esde where codc=(select codc from contenido where titulo='{titulo}'));")
+    lista_generos = database[1].fetchall()
+    longitud_lista_generos = len(lista_generos)-1
+    texto_genero = ""
+    for index,genero in enumerate(lista_generos):
+        if index == longitud_lista_generos:
+            texto_genero += genero[0]
+        else:
+            texto_genero += genero[0] + ","
+    print(f"{tipo} {titulo} es de los siguientes generos:ç"
+          f" {texto_genero}")
 def obtener_episodios_tipo_contenido(tipo):
     database[1].execute(
         f"select titulo,coalesce(episodios_vistos,0),episodios_totales from contenido,episodios where episodios.codc=contenido.codc and tipo='{tipo}'")
@@ -384,7 +398,7 @@ def main():
 
         elif opcion_menu_1 == 2:  # Ver datos
             print(
-                "1.Cuantos Episodios se han visto de un contenido especifico\n2.Saber cuantos episodios se han visto de animes/series\n3.En que plataforma veo contenido\n4.Cuanto contendio estoy viendo\n5.Cuanto he visto")
+                "1.Cuantos Episodios se han visto de un contenido especifico\n2.Saber cuantos episodios se han visto de animes/series\n3.En que plataforma veo contenido\n4.Cuanto contendio estoy viendo\n5.Cuanto he visto\n6.Generos a los que pertence un contenido")
             opcion_ver_datos = int(input())
             if opcion_ver_datos == 1:
                 tipo = input("Dime el tipo de contenido:").title()
@@ -400,6 +414,11 @@ def main():
                 tipo = input("Indicame el tipo de contenido:")
                 viendo = cuantos_veo_y_visto_contenido(tipo)[0]
                 print(f"Estoy viendo {tipo} un total de {viendo} {tipo.lower()}s")
+            elif opcion_ver_datos == 6:
+                tipo = input("Digame el tipo de contenido que desea ver:")
+                titulo = obtener_titulo_de_titulos(tipo)
+                mostrar_generos_contendio(titulo)
+
 
 
         elif opcion_menu_1 == 4:  # Actualizar datos
