@@ -301,6 +301,14 @@ def insertar_temporada(titulo, temporada, ep_totales, ep_vistos, estado):
 
 
 def insertar_temporada_vista(titulo, temporada, ep_totales, estado):
+    """
+    Insertar una temporada en caso de que este vista
+    Args:
+        titulo: El titulo del contenido
+        temporada: La temporada de la serie
+        ep_totales: Los episodios totales al hacerlo para una temporada
+        estado: El estado en caso de que este finalizada o no
+    """
     codc = obtenercodigo_contenido(titulo)
     database[1].execute(f"insert into episodios values('{codc}',{temporada},{ep_totales},{ep_totales},'{estado}');")
     database[0].commit()
