@@ -335,6 +335,19 @@ def cambiar_visualizacion_pelis(titulo, visualizacion):
     database[1].execute(f"update contenido set visualizacion='{visualizacion}' where titulo='{titulo}'")
     database[0].commit()
 
+def mostrar_tipo_diferente(tipos:list[str])->dict:
+    database[1].execute(f"select tipo from contenido where tipo<>'{tipos[0]}' and tipo<>'{tipos[1]}'")
+    tipos_numeros = dict()
+    tipos = database[1].fetchall()
+    for tipo in tipos:
+        if tipo[0]==tipo[0]:
+            tipos.remove(tipo)
+    num = 0
+    for tipo in tipos:
+        num += 1
+        tipos_numeros[num] = tipo[0]
+        print(f"{num}.{tipo[0]}")
+    return tipos_numeros
 
 def main():
     opcion_menu_1 = 0
@@ -446,8 +459,9 @@ def main():
                     descripcion = input("Introduce la descripcion a añadir")
                     anadir_descripcion(titulo, descripcion)
                 elif op_actualizar_ep == 2:
-                    tipo = input("Digame el tipo de contenido del que desea cambiar visualizacion:")
-                    titulo = obtener_titulo_de_titulos(tipo)
+                    tipos = mostrar_tipo_diferente()
+                    num_tipo = int(input("Introduzca numero de tipo:"))
+                    titulo = obtener_titulo_de_titulos(tipos.get(num_tipo))
                     visualizacion = input("Introduzca la visualizacion:")
                     cambiar_visualizacion_pelis(titulo,visualizacion)
 
