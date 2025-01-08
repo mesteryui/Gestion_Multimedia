@@ -335,8 +335,8 @@ def cambiar_visualizacion_pelis(titulo, visualizacion):
     database[1].execute(f"update contenido set visualizacion='{visualizacion}' where titulo='{titulo}'")
     database[0].commit()
 
-def mostrar_tipo_diferente(tipos:list[str])->dict:
-    database[1].execute(f"select tipo from contenido where tipo<>'{tipos[0]}' and tipo<>'{tipos[1]}'")
+def mostrar_tipo_diferente(*args)->dict:
+    database[1].execute(f"select tipo from contenido where tipo<>'{args[0]}' and tipo<>'{args[1]}'")
     tipos_numeros = dict()
     tipos = database[1].fetchall()
     for tipo in tipos:
