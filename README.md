@@ -11,18 +11,5 @@ debido a eso el programa puede no estar adaptado al script que estoy creando.
 Dado a que lo que hace el programa es muy sencillo como para necesitar algo tan potente como Postgres estoy probando a mudarlo a SQLite en esta rama de desarrollo
 
 ## Tecnologias utilizadas:
-- [PostgreSQL](https://www.postgresql.org/): Sistema de base de datos utilizado
+- Sqlite: He decidio cambiar a esta base de datos ya que para los requerimientos no es necesario tener algo tan complejo como Postgres
 - [Python](https://www.python.org/): Lenguaje de programacion utilizado
-- [psycopg](https://pypi.org/project/psycopg/): Sistema para conectar la base de datos con el programa y hacer operaciones
-
-## Credenciales
-Las credenciales se almacenan en un XML llamado `credentials.xml` con la siguiente estructura:
-```xml
-<credentials>
-    <user>nombre_usuario</user>
-    <host>localhost</host>
-    <password>contraseña</password>
-    <database>contenido_audiovisual</database>
-</credentials>
-```
-`contenido_audiovisual` es el nombre usado por defecto el script que configura la base de datos crea una base de datos con este nombre

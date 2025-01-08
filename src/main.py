@@ -50,13 +50,13 @@ def anadir_descripcion(titulo, descripcion):
     database[0].commit()
 
 
-def generar_codigo_contenido(tipo) -> str:
+def generar_codigo_contenido(tipo:str) -> str:
     """
     Pasando el tipo de contenido a añadir creamos el numero que se le añade al codigo y luego lo unimos a la letra
     :param tipo: el tipo de contenido a añadir
     :return: letra + (numero_contenido + 1)
     """
-      # Ejecutamos la consulta para obtener los codigos
+    # Ejecutamos la consulta para obtener los codigos
     letra = tipo[0].lower()  # Obtenemos la letra del tipo sacando el primer elemento como minuscula
     database[1].execute(f"select codc from contenido where tipo='{tipo}'")  # Obtenemos todos los codigos
     lista = database[1].fetchall()
