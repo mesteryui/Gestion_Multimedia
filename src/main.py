@@ -87,7 +87,7 @@ def generar_codigo_plataforma() -> str:
 
 
 def generar_codigo_genero(nomg) -> str:
-    return nomg[0:2].upper()  # Devolvemos la primera letra del genero en mayusculas
+    return nomg[0:2].upper()  # Devolvemos las dos primeras letras del genero en mayusculas
 
 
 def obtenercodigo_contenido(titulo) -> str:
