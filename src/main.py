@@ -445,7 +445,8 @@ def main():
                 print("1.Episodios Vistos\n2.Episodios totales\n3.Visto un episodio")
                 op_actualizar_ep = int(input())
                 if op_actualizar_ep == 1:
-                    titulo = input("Introduzca el titulo del anime/serie:")
+                    tipo = input("Indiqueme el tipo de contenido:")
+                    titulo = obtener_titulo_de_titulos(tipo)
                     ep_vistos = input("Introduzca en numero los episodios vistos:")
                     temporada = input("Digame en numero la temporada:")
                     anadirepisodios_vistos(titulo, ep_vistos, temporada)  # Añadimos nueva cantidad de episodios vistos
