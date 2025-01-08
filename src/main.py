@@ -331,6 +331,11 @@ def cambiar_episoidos_si_visto(temporada, episodios_totales, codc):
     database[0].commit()
 
 
+def cambiar_visualizacion_pelis(titulo, visualizacion):
+    database[1].execute(f"update contenido set visualizacion='{visualizacion}' where titulo='{titulo}'")
+    database[0].commit()
+
+
 def main():
     opcion_menu_1 = 0
     while opcion_menu_1 != 5:
@@ -433,13 +438,19 @@ def main():
             print("1.Contenido\n2.Episodios\n3.Plataformas")
             opcion_actualizar_datos = int(input())
             if opcion_actualizar_datos == 1:  # Actualizar datos del contenido
-                print("1.Añadir descripcion")
+                print("1.Añadir descripcion\n2.Añadir visualizacion Peliculas u otro")
                 op_actualizar_ep = int(input())
                 if op_actualizar_ep == 1:
                     tipo = input("Digame el tipo de contenido del que desea añadir una descripcion:")
                     titulo = obtener_titulo_de_titulos(tipo)
                     descripcion = input("Introduce la descripcion a añadir")
                     anadir_descripcion(titulo, descripcion)
+                elif op_actualizar_ep == 2:
+                    tipo = input("Digame el tipo de contenido del que desea cambiar visualizacion:")
+                    titulo = obtener_titulo_de_titulos(tipo)
+                    visualizacion = input("Introduzca la visualizacion:")
+                    cambiar_visualizacion_pelis(titulo,visualizacion)
+
 
             elif opcion_actualizar_datos == 2:  # Actualizar datos de los episodios
                 print("1.Episodios Vistos\n2.Episodios totales\n3.Visto un episodio")
