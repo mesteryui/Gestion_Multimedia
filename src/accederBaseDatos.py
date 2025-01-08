@@ -18,5 +18,4 @@ def conectar_base():
 
 def cerrar_conexion(datab):
     conex = datab[0]
-    curs = datab[1]
     conex.close()
