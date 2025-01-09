@@ -450,7 +450,6 @@ def main():
                     visualizacion = input("Introduzca la visualizacion:")
                     cambiar_visualizacion_contenido(titulo, visualizacion)
 
-
             elif opcion_actualizar_datos == 2:  # Actualizar datos de los episodios
                 print("1.Episodios Vistos\n2.Episodios totales\n3.Visto un episodio")
                 op_actualizar_ep = int(input())
