@@ -331,7 +331,7 @@ def cambiar_episoidos_si_visto(temporada, episodios_totales, codc):
     database[0].commit()
 
 
-def cambiar_visualizacion_pelis(titulo, visualizacion):
+def cambiar_visualizacion_contenido(titulo, visualizacion):
     database[1].execute(f"update contenido set visualizacion='{visualizacion}' where titulo='{titulo}'")
     database[0].commit()
 
@@ -445,11 +445,10 @@ def main():
                     descripcion = input("Introduce la descripcion a añadir")
                     anadir_descripcion(titulo, descripcion)
                 elif op_actualizar_ep == 2:
-                    tipos = mostrar_tipo_diferente()
-                    num_tipo = int(input("Introduzca numero de tipo:"))
-                    titulo = obtener_titulo_de_titulos(tipos.get(num_tipo))
+                    tipo = input("Digame el tipo de contenido del que desea añadir una descripcion:")
+                    titulo = obtener_titulo_de_titulos(tipo)
                     visualizacion = input("Introduzca la visualizacion:")
-                    cambiar_visualizacion_pelis(titulo,visualizacion)
+                    cambiar_visualizacion_contenido(titulo, visualizacion)
 
 
             elif opcion_actualizar_datos == 2:  # Actualizar datos de los episodios
