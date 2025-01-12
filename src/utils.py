@@ -1,4 +1,4 @@
-def generar_numero_nuevo_codigo(lista, letra):
+def generar_numero_nuevo_codigo(lista, letra:str) -> int:
     """
     Obtener el numero del codigo para un nuevo elemento, por ejemplo contenido, plataformas
     Args:
