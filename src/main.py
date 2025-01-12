@@ -105,7 +105,7 @@ def mostrar_generos_contendio(titulo):
             texto_genero += genero[0]
         else:
             texto_genero += genero[0] + ","
-    print(f"{tipo} {titulo} es de los siguientes generos:ç"
+    print(f"{tipo} {titulo} es de los siguientes generos:"
           f" {texto_genero}")
 def obtener_episodios_tipo_contenido(tipo):
     database[1].execute(
