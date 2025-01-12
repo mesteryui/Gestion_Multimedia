@@ -10,10 +10,10 @@ def generar_numero_nuevo_codigo(lista, letra:str) -> int:
     """
     numero_codigo = 0
     for elemento in lista:
-        numero = int(elemento[0].replace(letra,""))
-        if numero>numero_codigo:
-            numero_codigo = numero
-    return numero_codigo+1
+        numero = int(elemento[0].replace(letra,"")) # Obtenemos el numero del codigo casteando como entero el resultado de quitar las letras
+        if numero>numero_codigo: # Comprobamos si el numero es mayor al numero del codigo
+            numero_codigo = numero # Reasignamos a numero si se cumple si no no hacemos nada
+    return numero_codigo+1 # Devolvemos el numero_codigo + 1
 
 def generar_codigo_genero(nomg) -> str:
     return nomg[0:2].upper()  # Devolvemos las dos primeras letras del genero en mayusculas
