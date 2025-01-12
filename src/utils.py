@@ -6,7 +6,7 @@ def generar_numero_nuevo_codigo(lista, letra:str) -> int:
         letra: los caracteres que hay por en medio en estos codigos
 
     Returns:
-        El numero mayor mas 1
+        El numero mayor mas 1, asumiendo que el mayor si no hay nada en la lista es 0
     """
     numero_codigo = 0
     for elemento in lista:
