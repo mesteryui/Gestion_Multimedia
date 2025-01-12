@@ -50,6 +50,9 @@ def anadir_descripcion(titulo, descripcion):
     database[0].commit()
 
 
+
+
+
 def generar_codigo_contenido(tipo:str) -> str:
     """
     Pasando el tipo de contenido a añadir creamos el numero que se le añade al codigo y luego lo unimos a la letra
@@ -60,13 +63,7 @@ def generar_codigo_contenido(tipo:str) -> str:
     letra = tipo[0].lower()  # Obtenemos la letra del tipo sacando el primer elemento como minuscula
     database[1].execute(f"select codc from contenido where tipo='{tipo}'")  # Obtenemos todos los codigos
     lista = database[1].fetchall()
-    if not lista:  # Si la lista esta vacia
-        return letra + "1"  # Devolvemos el primer numero por el que empiezan los codigos
-    else:  # En caso contrario es decir que la lista contenga algo
-        lista_ordenada = sorted(lista, key=lambda x: int(x[0][1:]))  # Ordenamos los valores de la lista por numeros de menor a mayor
-        resultado = lista_ordenada[len(lista_ordenada) - 1][0]  # Obtenemos el ultimo indice de la lista pero como es bidimensional el dato estara siempre en el primer indice
-        resultado = resultado.replace(letra, "")  # Quitamos la letra
-        return letra + str(int(resultado) + 1)  # Devolvemos el resultado mas uno como numero
+    numero = generar_numero_nuevo_codigo(lista,letra)
 
 
 def generar_codigo_plataforma() -> str:
