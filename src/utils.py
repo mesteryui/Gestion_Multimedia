@@ -8,7 +8,7 @@ def generar_numero_nuevo_codigo(lista, letra:str) -> int:
     Returns:
         El numero mayor mas 1, asumiendo que el mayor si no hay nada en la lista es 0
     """
-    numero_codigo = 0
+    numero_codigo = 0 # Asumimos que el numero mayor es 0 de esta manera al devolver el numero siempre dara como queremos
     for elemento in lista:
         numero = int(elemento[0].replace(letra,"")) # Obtenemos el numero del codigo casteando como entero el resultado de quitar las letras
         if numero>numero_codigo: # Comprobamos si el numero es mayor al numero del codigo
