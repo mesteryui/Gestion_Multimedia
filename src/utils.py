@@ -1,5 +1,14 @@
 def generar_numero_nuevo_codigo(lista, letra):
-    numero_codigo = 1
+    """
+    Obtener el numero del codigo para un nuevo elemento, por ejemplo contenido, plataformas
+    Args:
+        lista: le pasamos la lista de codigos ya existentes
+        letra: los caracteres que hay por en medio en estos codigos
+
+    Returns:
+        El numero mayor más 1
+    """
+    numero_codigo = 0
     for elemento in lista:
         numero = int(elemento[0].replace(letra,""))
         if numero>numero_codigo:
