@@ -1,5 +1,6 @@
 from accederBaseDatos import conectar_base,cerrar_conexion
-from utils import generar_numero_nuevo_codigo
+from utils import generar_numero_nuevo_codigo, generar_codigo_genero
+
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 
 
