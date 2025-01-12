@@ -1,5 +1,5 @@
 from accederBaseDatos import conectar_base,cerrar_conexion
-
+from utils import generar_numero_nuevo_codigo
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 
 
@@ -64,6 +64,7 @@ def generar_codigo_contenido(tipo:str) -> str:
     database[1].execute(f"select codc from contenido where tipo='{tipo}'")  # Obtenemos todos los codigos
     lista = database[1].fetchall()
     numero = generar_numero_nuevo_codigo(lista,letra)
+    return letra + str(numero)
 
 
 def generar_codigo_plataforma() -> str:
@@ -74,13 +75,9 @@ def generar_codigo_plataforma() -> str:
     """
     database[1].execute("select codpl from plataformas;")  # Obtener los codigos de las plataformas
     lista = database[1].fetchall()  # Guardarlos en una lista
-    if not lista:  # Si la lista esta vacia
-        return "pl1"  # Devolvemos el codigo con el primer numero
-    else:
-        lista_ordenada = sorted(lista, key=lambda x: int(x[0][2:]))  # Ordenar esa lista de menor a mayor numero
-        resultado = lista_ordenada[len(lista_ordenada) - 1][0]  # Acceder al ultimo elemento de la lista
-        resultado = int(resultado.replace("pl", "")) + 1  # Quitarle los dos primeros caracters
-        return "pl" + str(resultado)  # Devolver el resultado de eso más 1 añadiendole pl para hacer el codigo final
+    numero = generar_numero_nuevo_codigo(lista,"pl")
+    return "pl" + str(numero)
+
 
 
 def generar_codigo_genero(nomg) -> str:
