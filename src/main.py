@@ -352,6 +352,7 @@ def main():
                         f"insert into episodios values('{codc}',{temporada},{episodios_totales},null,'{estado}')")
                     database[0].commit()
                     if visualizacion == "si":
+                        database[1].execute(f"update contenido set visualizacion='{visualizacion} where codc='{codc}'")
                         cambiar_episoidos_si_visto(temporada, episodios_totales, codc)
                     else:
                         vist = input("Ha visto algun episodio:")
