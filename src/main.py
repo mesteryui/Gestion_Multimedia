@@ -430,7 +430,7 @@ def main():
             print("1.Contenido\n2.Episodios\n3.Plataformas")
             opcion_actualizar_datos = int(input())
             if opcion_actualizar_datos == 1:  # Actualizar datos del contenido
-                print("1.Añadir descripcion\n2.Añadir visualizacion Peliculas u otro")
+                print("1.Añadir descripcion\n2.Añadir visualizacion")
                 op_actualizar_ep = int(input())
                 if op_actualizar_ep == 1:
                     tipo = input("Digame el tipo de contenido del que desea añadir una descripcion:")
@@ -440,8 +440,23 @@ def main():
                 elif op_actualizar_ep == 2:
                     tipo = input("Digame el tipo de contenido del que desea añadir una descripcion:")
                     titulo = obtener_titulo_de_titulos(tipo)
-                    visualizacion = input("Introduzca la visualizacion:")
-                    cambiar_visualizacion_contenido(titulo, visualizacion)
+                    if tipo == "Serie" or tipo == "Anime":
+                        codc = obtenercodigo_contenido(titulo)
+                        database[1].execute(f"select count(temporada) from episodios where codc={codc}")
+                        num_temporadas = database[1].fetchall()
+                        database[1].execute(f"select episodios_totales,episodios_vistos from episodios where codc='{codc}'")
+                        episodios = database[1].fetchall()
+                        cont = 0
+                        for episodio in episodios:
+                            if episodio[0] == episodio[1]:
+                                cont += 1
+                        if cont == num_temporadas[0]:
+                            cambiar_visualizacion_contenido(titulo,"Visto")
+                    else:
+                        visualizacion = input("Introduzca la visualizacion:")
+                        cambiar_visualizacion_contenido(titulo, visualizacion)
+
+
 
             elif opcion_actualizar_datos == 2:  # Actualizar datos de los episodios
                 print("1.Episodios Vistos\n2.Episodios totales\n3.Visto un episodio")
