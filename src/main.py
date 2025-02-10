@@ -1,5 +1,6 @@
 from accederBaseDatos import conectar_base,cerrar_conexion
-from utils import generar_numero_nuevo_codigo
+from utils import generar_numero_nuevo_codigo, generar_codigo_genero
+
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 
 
@@ -80,9 +81,6 @@ def generar_codigo_plataforma() -> str:
 
 
 
-def generar_codigo_genero(nomg) -> str:
-    return nomg[0:2].upper()  # Devolvemos las dos primeras letras del genero en mayusculas
-
 
 def obtenercodigo_contenido(titulo) -> str:
     """
@@ -107,7 +105,7 @@ def mostrar_generos_contendio(titulo):
             texto_genero += genero[0]
         else:
             texto_genero += genero[0] + ","
-    print(f"{tipo} {titulo} es de los siguientes generos:ç"
+    print(f"{tipo} {titulo} es de los siguientes generos:"
           f" {texto_genero}")
 def obtener_episodios_tipo_contenido(tipo):
     database[1].execute(
