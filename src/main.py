@@ -330,11 +330,11 @@ def cambiar_visualizacion_contenido(titulo, visualizacion):
 def main():
     opcion_menu_1 = 0
     while opcion_menu_1 != 5:
+        print("\033[32mBienvenidos a este sistema simple de gestion multimedia\033[0m")
         print("1.Introducir Datos\n2.Ver datos\n3.Eliminar Dato\n4.Actualizar dato\n5.Salir")
         opcion_menu_1 = int(input("Seleccione una opción: "))
         if opcion_menu_1 == 1:  # Añadir contenido
-            print(
-                "1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero\n7.Añadir nueva temporada a una serie")
+            print("1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero\n7.Añadir nueva temporada a una serie")
             opcion_anadir_datos = int(input())
             if opcion_anadir_datos == 1:  # Añadir un nuevo contenido
                 titulo = input("Introduzca el titulo del contenido:")
