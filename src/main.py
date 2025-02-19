@@ -1,9 +1,8 @@
 from accederBaseDatos import conectar_base,cerrar_conexion
 from utils import generar_numero_nuevo_codigo, generar_codigo_genero
-from os import system
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 
-def actualizarVisto():
+def actualizar_visto():
     pass
 
 def mostrar_contenido(tipo:str) -> dict:
@@ -331,7 +330,7 @@ def cambiar_visualizacion_contenido(titulo, visualizacion):
 
 def main():
     opcion_menu_1 = 0
-    print("\033[32mBienvenidos a Gestion Multimedia el programa más cutre para gestionar el contendio que ves\033[0mA")
+    print("\033[32mBienvenidos a Gestion Multimedia el programa más cutre para gestionar el contendio que ves\033[0m")
     while opcion_menu_1 != 5:
         print("1.Introducir Datos\n2.Ver datos\n3.Eliminar Dato\n4.Actualizar dato\n5.Salir")
         opcion_menu_1 = int(input("Seleccione una opción: "))
