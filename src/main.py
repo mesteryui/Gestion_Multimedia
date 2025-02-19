@@ -3,6 +3,8 @@ from utils import generar_numero_nuevo_codigo, generar_codigo_genero
 from os import system
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 
+def actualizarVisto():
+    pass
 
 def mostrar_contenido(tipo:str) -> dict:
     """
