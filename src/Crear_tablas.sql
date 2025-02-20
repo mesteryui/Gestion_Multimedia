@@ -6,6 +6,8 @@ DROP TABLE IF EXISTS plataformas;
 DROP TABLE IF EXISTS esde;
 DROP TABLE IF EXISTS disponible;
 
+PRAGMA foreign_keys = ON;
+
 /** Estableciendo tablas **/
 CREATE TABLE contenido (
     codc TEXT PRIMARY KEY, -- SQLite usa TEXT en lugar de varchar
