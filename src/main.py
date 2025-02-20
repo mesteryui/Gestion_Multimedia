@@ -4,6 +4,11 @@ import json
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 
 def acceder_lista_temporadas():
+    """
+    Acceso a las temporadas en el json
+    Returns:
+        Devuelve el json que contiene las temporadas y sus numeros como un diccionario
+    """
     with open("temporadas.json", "r") as archivo:
         data = json.load(archivo)  # Se carga en un diccionario
     return data
