@@ -6,10 +6,10 @@ begin
 
 if new.episodios_vistos=old.episodios_totales then
     update contenido set visualizacion='Visto' where codc=old.codc;
-elif new.episodios_vistos<old.episodios_totales then
+elsif new.episodios_vistos<old.episodios_totales then
     update contenido set visualizacion='Viendo' where codc=old.codc;
 end if;
 return new;
 end;$$;
 
-create trigger t1_sabervisto after insert on xogador for each row execute procedure ft1_obtenervisto();
+create trigger t1_sabervisto after update on episodios for each row execute procedure ft1_obtenervisto();
