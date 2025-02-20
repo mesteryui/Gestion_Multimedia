@@ -4,8 +4,11 @@ declare
 
 begin
 
-
-
+if new.episodios_vistos=old.episodios_totales then
+    update contenido set visualizacion='Visto' where codc=old.codc;
+elif new.episodios_vistos<old.episodios_totales then
+    update contenido set visualizacion='Viendo' where codc=old.codc;
+end if;
 return new;
 end;$$;
 

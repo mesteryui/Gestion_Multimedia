@@ -1,8 +1,9 @@
 import psycopg
+from psycopg import sql
 import xml.etree.ElementTree as ET
-
+from pathlib import Path
 def leerXML():
-    tree = ET.parse('archivo.xml')
+    tree = ET.parse(Path.cwd().parent.joinpath("credentials.xml"))
     root = tree.getroot()
     return root
 
@@ -14,14 +15,21 @@ def conectar_base():
     """
     credenciales = leerXML()
     try:
-        connection = psycopg.connect(database = "audiovisual",
+        connection = psycopg.connect(database = "postgres",
                         user = credenciales.find("user"),
                         host= 'localhost',
                         password = credenciales.find("password"),
                         port = 5432)
+        db_name = "audiovisual"
         cursor = connection.cursor()
+        cursor.execute("SELECT 1 FROM pg_database WHERE datname = %s", (db_name,))
+        exists = cursor.fetchone()
+        if not exists:
+            # Crear la base de datos
+            cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(db_name)))
+
         return connection,cursor
-    except sqlite3.OperationalError:
+    except psycopg.Error:
         return "La base de datos no fue abierta correctamente"
 
 
