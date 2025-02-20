@@ -1,6 +1,10 @@
-import sqlite3
-from pathlib import Path
+import psycopg
+import xml.etree.ElementTree as ET
 
+def leerXML():
+    tree = ET.parse('archivo.xml')
+    root = tree.getroot()
+    return root
 
 def conectar_base():
     """
@@ -8,8 +12,13 @@ def conectar_base():
     Returns:
         La conexion a la base de datos, el cursor para poder hacer consultas y por si acaso el cursor de cliente
     """
+    credenciales = leerXML()
     try:
-        connection = sqlite3.connect(Path.cwd().parent.joinpath("main.db"))
+        connection = psycopg.connect(database = "audiovisual",
+                        user = credenciales.find("user"),
+                        host= 'localhost',
+                        password = credenciales.find("password"),
+                        port = 5432)
         cursor = connection.cursor()
         return connection,cursor
     except sqlite3.OperationalError:

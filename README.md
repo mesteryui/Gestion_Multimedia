@@ -11,5 +11,5 @@ debido a eso el programa puede no estar adaptado al script que estoy creando.
 Dado a que lo que hace el programa es muy sencillo como para necesitar algo tan potente como Postgres estoy probando a mudarlo a SQLite en esta rama de desarrollo
 
 ## Tecnologias utilizadas:
-- Sqlite: He decidio cambiar a esta base de datos ya que para los requerimientos no es necesario tener algo tan complejo como Postgres
+- PostgreSQL: He decidido volver a esta por dos motivos principales SQLite se me esta quedando corto y con esta ya se manejarme y un poco que esperarme
 - [Python](https://www.python.org/): Lenguaje de programacion utilizado

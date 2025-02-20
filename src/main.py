@@ -1,7 +1,15 @@
 from accederBaseDatos import conectar_base,cerrar_conexion
 from utils import generar_numero_nuevo_codigo, generar_codigo_genero
 import json
+from pathlib import Path
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
+database[1].execute("SELECT name FROM sqlite_master WHERE type='table'")
+tablas = database[1].fetchall()
+if len(tablas) > 0:
+    database[1].executescript(Path.cwd().joinpath("../triggers.sql").read_text())
+else:
+    database[1].executescript(Path.cwd().joinpath("../Crear_tablas.sql").read_text())
+    database[1].executescript(Path.cwd().joinpath("../triggers.sql").read_text())
 
 def acceder_temporadas():
     """
