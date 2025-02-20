@@ -3,12 +3,12 @@ from utils import generar_numero_nuevo_codigo, generar_codigo_genero
 import json
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 
-def accederListaTemporadas():
+def acceder_lista_temporadas():
     with open("temporadas.json", "r") as archivo:
         data = json.load(archivo)  # Se carga en un diccionario
     return data
 
-temporadas = accederListaTemporadas()
+temporadas = acceder_lista_temporadas()
 
 def actualizar_visto():
     pass
