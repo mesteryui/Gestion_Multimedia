@@ -332,6 +332,7 @@ def main():
         if opcion_menu_1 == 1:  # Añadir contenido
             print(
                 "1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero\n7.Añadir nueva temporada a una serie")
+
             opcion_anadir_datos = int(input())
             if opcion_anadir_datos == 1:  # Añadir un nuevo contenido
                 titulo = input("Introduzca el titulo del contenido:")
