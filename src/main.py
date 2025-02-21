@@ -344,20 +344,15 @@ def main():
                 if tipo == "Serie" or tipo == "Anime":
                     temporada = input("Digame en numero la temporada:")
                     episodios_totales = input("Dime cuantos episodios tiene el contenido:")
-                    visualizacion = input("Dime la visualizacion (si esta visto o no):")
                     estado = input("Digame el estado en el que esta la temporada(si lo sabe):")
                     database[1].execute(
                         f"insert into episodios values('{codc}',{temporada},{episodios_totales},null,'{estado}')")
                     database[0].commit()
-                    if visualizacion == "si":
-                        cambiar_episoidos_si_visto(temporada, episodios_totales, codc)
-                    else:
-                        vist = input("Ha visto algun episodio:")
-                        if vist.lower() == "si":
-                            ep_vistos = input("Digame cuantos episodios ha visto(en numero):")
-                            anadirepisodios_vistos(titulo, ep_vistos, temporada)
-                        else:
-                            continue
+                    cambiar_episoidos_si_visto(temporada, episodios_totales, codc)
+                    vist = input("Ha visto algun episodio:")
+                    if vist.lower() == "si":
+                        ep_vistos = input("Digame cuantos episodios ha visto(en numero):")
+                        anadirepisodios_vistos(titulo, ep_vistos, temporada)
                 else:
                     visualizacion = input("Digame si esta Viendo o ha visto(tipo: Viendo,Visto):")
                     database[1].execute(f"update contenido set visualizacion='{visualizacion}' where titulo='{titulo}'")
