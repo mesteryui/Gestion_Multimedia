@@ -1,7 +1,6 @@
 from accederBaseDatos import conectar_base,cerrar_conexion
 from utils import generar_numero_nuevo_codigo, generar_codigo_genero
-import json
-from pathlib import Path
+
 database = conectar_base()  # Obtenemos la conexion a la base de datos y un cursor el cual sera util en todas las funciones que hagamos
 
 
@@ -175,7 +174,25 @@ def pasar_temporada_letra(temporada:int) -> str:
     Returns:
         La temporada en letra o si no muchas despues
     """
-    return temporadas.get(str(temporada), "muchas despues")
+    temporadas = {
+        1: "primera",
+        2: "segunda",
+        3: "tercera",
+        4: "cuarta",
+        5: "quinta",
+        6: "sexta",
+        7: "séptima",
+        8: "octava",
+        9: "novena",
+        10: "décima",
+        11: "undécima",
+        12: "duodécima",
+        13: "decimotercera",
+        14: "decimocuarta",
+        15: "decimoquinta",
+        16: "decimosexta"
+    }
+    return temporadas.get(temporada, "muchas despues")
 
 
 def episodios_saber(titulo):
@@ -325,14 +342,12 @@ def cambiar_visualizacion_contenido(titulo, visualizacion):
 
 def main():
     opcion_menu_1 = 0
-    print("\033[32mBienvenidos a Gestion Multimedia el programa más cutre para gestionar el contendio que ves\033[0m")
     while opcion_menu_1 != 5:
         print("1.Introducir Datos\n2.Ver datos\n3.Eliminar Dato\n4.Actualizar dato\n5.Salir")
         opcion_menu_1 = int(input("Seleccione una opción: "))
         if opcion_menu_1 == 1:  # Añadir contenido
             print(
                 "1.Contenido\n2.Plataformas\n3.Generos\n4.Contenido-Plataforma\n5.Insertar episodios contenido\n6.Insertar Contenido-Genero\n7.Añadir nueva temporada a una serie")
-
             opcion_anadir_datos = int(input())
             if opcion_anadir_datos == 1:  # Añadir un nuevo contenido
                 titulo = input("Introduzca el titulo del contenido:")
@@ -344,15 +359,20 @@ def main():
                 if tipo == "Serie" or tipo == "Anime":
                     temporada = input("Digame en numero la temporada:")
                     episodios_totales = input("Dime cuantos episodios tiene el contenido:")
+                    visualizacion = input("Dime la visualizacion (si esta visto o no):")
                     estado = input("Digame el estado en el que esta la temporada(si lo sabe):")
                     database[1].execute(
                         f"insert into episodios values('{codc}',{temporada},{episodios_totales},null,'{estado}')")
                     database[0].commit()
-                    cambiar_episoidos_si_visto(temporada, episodios_totales, codc)
-                    vist = input("Ha visto algun episodio:")
-                    if vist.lower() == "si":
-                        ep_vistos = input("Digame cuantos episodios ha visto(en numero):")
-                        anadirepisodios_vistos(titulo, ep_vistos, temporada)
+                    if visualizacion == "si":
+                        cambiar_episoidos_si_visto(temporada, episodios_totales, codc)
+                    else:
+                        vist = input("Ha visto algun episodio:")
+                        if vist.lower() == "si":
+                            ep_vistos = input("Digame cuantos episodios ha visto(en numero):")
+                            anadirepisodios_vistos(titulo, ep_vistos, temporada)
+                        else:
+                            continue
                 else:
                     visualizacion = input("Digame si esta Viendo o ha visto(tipo: Viendo,Visto):")
                     database[1].execute(f"update contenido set visualizacion='{visualizacion}' where titulo='{titulo}'")

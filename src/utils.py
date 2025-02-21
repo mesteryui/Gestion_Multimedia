@@ -1,4 +1,4 @@
-def generar_numero_nuevo_codigo(lista, letra:str) -> int:
+def generar_numero_nuevo_codigo(lista:list[tuple[str]], letra:str) -> int:
     """
     Obtener el numero del codigo para un nuevo elemento, por ejemplo contenido, plataformas
     Args:
@@ -19,5 +19,5 @@ def generar_codigo_genero(nomg) -> str:
     return nomg[0:2].upper()  # Devolvemos las dos primeras letras del genero en mayusculas
 
 if __name__ == '__main__':
-    lis = [["a5"], ["a1"], ["a10"], ["a3"], ["a4"]]
-    print(generar_numero_nuevo_codigo(lis, "a"))
+    lis = [("s5",), ("s1",), ("s10",), ("s3",), ("s4",)]
+    print(generar_numero_nuevo_codigo(lis, "s"))
