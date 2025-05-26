@@ -174,24 +174,6 @@ def pasar_temporada_letra(temporada:int) -> str:
     Returns:
         La temporada en letra o si no muchas despues
     """
-    temporadas = {
-        1: "primera",
-        2: "segunda",
-        3: "tercera",
-        4: "cuarta",
-        5: "quinta",
-        6: "sexta",
-        7: "séptima",
-        8: "octava",
-        9: "novena",
-        10: "décima",
-        11: "undécima",
-        12: "duodécima",
-        13: "decimotercera",
-        14: "decimocuarta",
-        15: "decimoquinta",
-        16: "decimosexta"
-    }
     return temporadas.get(temporada, "muchas despues")
 
 
